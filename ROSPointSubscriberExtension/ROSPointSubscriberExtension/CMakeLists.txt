@@ -9,7 +9,6 @@ set(MODULE_HDRS
   qSlicerROSPointSubscriberModule.h
 )
 
-# The module will link against the logic library we built earlier
 set(MODULE_TARGET_LIBRARIES
   ${PROJECT_NAME}Logic
   MRMLCore
