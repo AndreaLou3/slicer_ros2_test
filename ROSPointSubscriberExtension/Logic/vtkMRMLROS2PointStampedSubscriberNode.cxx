@@ -4,6 +4,8 @@
 #include "vtkMRMLMarkupsFiducialNode.h"
 #include "vtkMRMLScene.h"
 #include <vtkNew.h>
+#include <vtkMRMLSliceNode.h> 
+#include <vtkVector.h> 
 
 vtkMRMLNodeNewMacro(vtkMRMLROS2PointStampedSubscriberNode);
 
@@ -36,8 +38,10 @@ void vtkMRMLROS2PointStampedSubscriberNode
   {
     vtkNew<vtkMRMLMarkupsFiducialNode> newFid;
     newFid->SetName("ROSPoint");
-    fid = newFid;
-    scene->AddNode(fid);
+    // fid = newFid;
+    // scene->AddNode(fid);
+    fid = newFid.GetPointer();
+    scene->AddNode(newFid.GetPointer());
   }
 
   const auto& p = msg.point;

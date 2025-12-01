@@ -16,12 +16,12 @@ void qSlicerROSPointSubscriberModule::setup()
 
   // Register the MRML node so Slicer knows it exists
   vtkNew<vtkMRMLROS2PointStampedSubscriberNode> node;
-  this->mrmlScene()->RegisterNodeClass(node);
+  this->mrmlScene()->RegisterNodeClass(node.GetPointer());
 
   // --- Create instance of the subscriber ---
   vtkNew<vtkMRMLROS2PointStampedSubscriberNode> sub;
   sub->SetName("AutoPointSubscriber");
   sub->SetTopicName("/point_coords");
-  scene->AddNode(sub);
+  this->mrmlScene()->AddNode(sub.GetPointer());
 }
 
