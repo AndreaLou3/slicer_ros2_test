@@ -1,31 +1,25 @@
-cmake_minimum_required(VERSION 3.13.4)
+set(MODULE_NAME "ROSPointSubscriberExtension")
+set(MODULE_TITLE "ROS Point Subscriber")
 
-project(ROSPointSubscriberExtension)
-
-find_package(Slicer REQUIRED)
-include(${Slicer_USE_FILE})
-
-# Find slicer_ros2_module
-find_package(slicer_ros2_module REQUIRED)
-
-add_subdirectory(Logic)
-
-set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULE_ROSPOINTSUBSCRIBER_EXPORT")
-
-set(qt_module_SRCS
-    qSlicerROSPointSubscriberModule.cxx
+set(MODULE_SRCS
+  qSlicerROSPointSubscriberModule.cxx
 )
 
-set(qt_module_MOC_SRCS
-    qSlicerROSPointSubscriberModule.h
+set(MODULE_HDRS
+  qSlicerROSPointSubscriberModule.h
 )
 
-slicerMacroBuildQtModule(
-    NAME ROSPointSubscriber
-    SRCS ${qt_module_SRCS}
-    MOC_SRCS ${qt_module_MOC_SRCS}
-    TARGET_LIBRARIES
-        Logic
-        slicer_ros2_module
+# The module will link against the logic library we built earlier
+set(MODULE_TARGET_LIBRARIES
+  ${PROJECT_NAME}Logic
+  MRMLCore
+  MRMLLogic
+  SlicerBaseLogic
 )
 
+slicerMacroBuildLoadableModule(
+  NAME ${MODULE_NAME}
+  TITLE ${MODULE_TITLE}
+  SRCS ${MODULE_SRCS} ${MODULE_HDRS}
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+)

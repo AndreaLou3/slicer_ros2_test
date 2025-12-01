@@ -18,7 +18,7 @@ void qSlicerROSPointSubscriberModule::setup()
   vtkNew<vtkMRMLROS2PointStampedSubscriberNode> node;
   this->mrmlScene()->RegisterNodeClass(node.GetPointer());
 
-  // --- Create instance of the subscriber ---
+  // Create instance of the subscriber node and add it to the scene
   vtkNew<vtkMRMLROS2PointStampedSubscriberNode> sub;
   sub->SetName("AutoPointSubscriber");
   sub->SetTopicName("/point_coords");
