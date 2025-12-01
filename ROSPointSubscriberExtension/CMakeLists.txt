@@ -1,25 +1,33 @@
-set(MODULE_NAME "ROSPointSubscriberExtension")
-set(MODULE_TITLE "ROS Point Subscriber")
+cmake_minimum_required(VERSION 3.13.4)
 
-set(MODULE_SRCS
-  qSlicerROSPointSubscriberModule.cxx
-)
+project(ROSPointSubscriberExtension)
 
-set(MODULE_HDRS
-  qSlicerROSPointSubscriberModule.h
-)
+# --------------------------------------------------------------------------
+# 1. Load Slicer
+# --------------------------------------------------------------------------
+find_package(Slicer REQUIRED)
+include(${Slicer_USE_FILE})
+include(${Slicer_EXTENSION_CMAKE})
 
-# The module will link against the logic library we built earlier
-set(MODULE_TARGET_LIBRARIES
-  ${PROJECT_NAME}Logic
-  MRMLCore
-  MRMLLogic
-  SlicerBaseLogic
-)
+# --------------------------------------------------------------------------
+# 2. Extension metadata
+# --------------------------------------------------------------------------
+set(EXTENSION_NAME "ROSPointSubscriberExtension")
+set(EXTENSION_HOMEPAGE "none")
+set(EXTENSION_CATEGORY "ROS")
+set(EXTENSION_DESCRIPTION "ROS2 PointStamped Subscriber Module")
+set(EXTENSION_CONTRIBUTORS "Andrea Lou")
 
-slicerMacroBuildLoadableModule(
-  NAME ${MODULE_NAME}
-  TITLE ${MODULE_TITLE}
-  SRCS ${MODULE_SRCS} ${MODULE_HDRS}
-  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-)
+# This is where Slicer finds the dependent extension
+set(EXTENSION_DEPENDS slicer_ros2_module)
+
+# --------------------------------------------------------------------------
+# 3. Add module + logic
+# --------------------------------------------------------------------------
+add_subdirectory(Logic)
+add_subdirectory(ROSPointSubscriberExtension)
+
+# --------------------------------------------------------------------------
+# 4. Install extension
+# --------------------------------------------------------------------------
+slicer_extension_install_all()
