@@ -1,33 +1,24 @@
 cmake_minimum_required(VERSION 3.13.4)
-
 project(ROSPointSubscriberExtension)
 
-# --------------------------------------------------------------------------
 # 1. Load Slicer
-# --------------------------------------------------------------------------
 find_package(Slicer REQUIRED)
 include(${Slicer_USE_FILE})
-include(${Slicer_EXTENSION_CMAKE})
 
-# --------------------------------------------------------------------------
-# 2. Extension metadata
-# --------------------------------------------------------------------------
+# 2. Extension metadata — MUST be before including extension macros
 set(EXTENSION_NAME "ROSPointSubscriberExtension")
 set(EXTENSION_HOMEPAGE "none")
 set(EXTENSION_CATEGORY "ROS")
 set(EXTENSION_DESCRIPTION "ROS2 PointStamped Subscriber Module")
 set(EXTENSION_CONTRIBUTORS "Andrea Lou")
+set(EXTENSION_DEPENDS "slicer_ros2_module")
 
-# This is where Slicer finds the dependent extension
-set(EXTENSION_DEPENDS slicer_ros2_module)
+# 3. Include Slicer extension macros
+include(${Slicer_EXTENSION_CMAKE})
 
-# --------------------------------------------------------------------------
-# 3. Add module + logic
-# --------------------------------------------------------------------------
+# 4. Add logic and module
 add_subdirectory(Logic)
 add_subdirectory(ROSPointSubscriberExtension)
 
-# --------------------------------------------------------------------------
-# 4. Install extension
-# --------------------------------------------------------------------------
+# 5. Install extension
 slicer_extension_install_all()
