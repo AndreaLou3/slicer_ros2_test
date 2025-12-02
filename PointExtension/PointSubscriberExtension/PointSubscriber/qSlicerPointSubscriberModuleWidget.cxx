@@ -24,6 +24,7 @@
 
 #include "vtkSlicerPointSubscriberLogic.h"
 
+
 //-----------------------------------------------------------------------------
 class qSlicerPointSubscriberModuleWidgetPrivate: public Ui_qSlicerPointSubscriberModuleWidget
 {

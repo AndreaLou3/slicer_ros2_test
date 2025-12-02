@@ -8,6 +8,10 @@ string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 add_subdirectory(Logic)
 add_subdirectory(Widgets)
 
+# include_directories(
+#   ${Slicer_EXTENSION_INCLUDE_DIR}/slicer_ros2_module
+# )
+
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
 
