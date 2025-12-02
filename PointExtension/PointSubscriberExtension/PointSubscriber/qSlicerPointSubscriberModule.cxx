@@ -94,6 +94,14 @@ QStringList qSlicerPointSubscriberModule::dependencies() const
 void qSlicerPointSubscriberModule::setup()
 {
   this->Superclass::setup();
+  
+  // Initialize the subscriber when module loads
+  vtkSlicerPointSubscriberLogic* logic = 
+    vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
+  if (logic)
+  {
+    logic->InitializeSubscriber();
+  }
 }
 
 //-----------------------------------------------------------------------------
