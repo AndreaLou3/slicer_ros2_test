@@ -150,7 +150,7 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
   vtkInfoMacro("Array has " << arr->GetNumberOfTuples() << " tuples and " 
                << arr->GetNumberOfComponents() << " components");
   
-  if (arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
+  if (arr->GetNumberOfValues() < 3)
   {
     vtkErrorMacro("Array doesn't have enough data!");
     return;
