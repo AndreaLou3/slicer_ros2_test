@@ -38,24 +38,12 @@ set(MODULE_UI_SRCS
 set(MODULE_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
   qSlicer${MODULE_NAME}ModuleWidgets
+  slicer_ros2_moduleLogic
   )
 
 set(MODULE_RESOURCES
   Resources/qSlicer${MODULE_NAME}Module.qrc
   )
-
-# #-----------------------------------------------------------------------------
-# find_package(slicer_ros2_module REQUIRED)
-
-# # Link logic library to slicer_ros2_module
-# target_link_libraries(vtkSlicer${MODULE_NAME}ModuleLogic
-#   PRIVATE slicer_ros2_module
-# )
-
-# # Link widget library if it needs ROS2 symbols
-# target_link_libraries(qSlicer${MODULE_NAME}ModuleWidgets
-#   PRIVATE slicer_ros2_module
-# )
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildLoadableModule(
