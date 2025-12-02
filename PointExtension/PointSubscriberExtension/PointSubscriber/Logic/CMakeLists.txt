@@ -28,6 +28,7 @@ set(${KIT}_SRCS
 set(${KIT}_TARGET_LIBRARIES
   ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleMRML.so
   ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleLogic.so
+  vtkSlicerMarkupsModuleMRML 
   ${VTK_LIBRARIES}
   ${ITK_LIBRARIES}
   )
