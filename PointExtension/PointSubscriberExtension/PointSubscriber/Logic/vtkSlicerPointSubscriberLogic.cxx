@@ -26,6 +26,12 @@
 #include <vtkNew.h>
 #include <vtkObjectFactory.h>
 
+#include <vtkMRMLScene.h>
+#include <vtkMRMLROS2NodeNode.h>
+#include <vtkMRMLROS2SubscriberNode.h>
+#include <vtkMRMLMarkupsFiducialNode.h>
+
+
 // STD includes
 #include <cassert>
 
@@ -81,3 +87,73 @@ void vtkSlicerPointSubscriberLogic
 ::OnMRMLSceneNodeRemoved(vtkMRMLNode* vtkNotUsed(node))
 {
 }
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::InitializeSubscriber()
+{
+  vtkMRMLScene* scene = this->GetMRMLScene();
+  if (!scene)
+  {
+    vtkErrorMacro("Cannot initialize subscriber: no scene found.");
+    return;
+  }
+
+  // Find the active ROS2 node in the scene
+  auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(
+      scene->GetFirstNodeByClass("vtkMRMLROS2NodeNode"));
+  if (!rosNode)
+  {
+    vtkErrorMacro("No ROS2 node exists! Start the Slicer ROS2 module first.");
+    return;
+  }
+
+  // Create a DoubleArray subscriber for xyz
+  auto sub = rosNode->CreateAndAddSubscriberNode("DoubleArray", "/my_point_topic");
+  if (!sub)
+  {
+    vtkErrorMacro("Failed to create subscriber!");
+    return;
+  }
+
+  // Observe changes
+  sub->AddObserver(vtkCommand::ModifiedEvent, this,
+    &vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks);
+
+  this->PointSubscriberNode = sub;
+
+  vtkInfoMacro("Point subscriber initialized.");
+}
+
+
+//------------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
+    vtkObject* caller, unsigned long, void*)
+{
+  auto* sub = vtkMRMLROS2SubscriberNode::SafeDownCast(caller);
+  if (!sub)
+    return;
+
+  // Last message is stored as vtkDoubleArray
+  vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(sub->GetOutputData());
+  if (!arr || arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
+    return;
+
+  double point[3];
+  arr->GetTuple(0, point);
+
+  this->UpdateFiducial(point);
+}
+
+//------------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
+{
+  if (!this->FiducialNode)
+  {
+    this->FiducialNode = vtkMRMLMarkupsFiducialNode::New();
+    this->GetMRMLScene()->AddNode(this->FiducialNode);
+    this->FiducialNode->AddFiducial(0, 0, 0); // one point initially
+  }
+
+  this->FiducialNode->SetNthControlPointPosition(0, xyz[0], xyz[1], xyz[2]);
+}
+

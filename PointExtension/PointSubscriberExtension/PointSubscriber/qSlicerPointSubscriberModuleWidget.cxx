@@ -22,6 +22,8 @@
 #include "qSlicerPointSubscriberModuleWidget.h"
 #include "ui_qSlicerPointSubscriberModuleWidget.h"
 
+#include "vtkSlicerPointSubscriberLogic.h"
+
 //-----------------------------------------------------------------------------
 class qSlicerPointSubscriberModuleWidgetPrivate: public Ui_qSlicerPointSubscriberModuleWidget
 {
@@ -58,4 +60,10 @@ void qSlicerPointSubscriberModuleWidget::setup()
   Q_D(qSlicerPointSubscriberModuleWidget);
   d->setupUi(this);
   this->Superclass::setup();
+
+  auto logic = vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
+  if (logic)
+  {
+    logic->InitializeSubscriber();
+  }
 }

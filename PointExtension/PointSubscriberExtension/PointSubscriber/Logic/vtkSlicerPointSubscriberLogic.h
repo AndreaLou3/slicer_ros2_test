@@ -28,6 +28,8 @@
 #include "vtkSlicerModuleLogic.h"
 
 // MRML includes
+#include <vtkMRMLMarkupsFiducialNode.h>
+#include <vtkMRMLROS2SubscriberNode.h> 
 
 // STD includes
 #include <cstdlib>
@@ -44,6 +46,9 @@ public:
   vtkTypeMacro(vtkSlicerPointSubscriberLogic, vtkSlicerModuleLogic);
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
+  void InitializeSubscriber();
+  void OnPointMessageReceived(const geometry_msgs__msg__PointStamped* msg);
+
 protected:
   vtkSlicerPointSubscriberLogic();
   ~vtkSlicerPointSubscriberLogic() override;
@@ -54,10 +59,19 @@ protected:
   void UpdateFromMRMLScene() override;
   void OnMRMLSceneNodeAdded(vtkMRMLNode* node) override;
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
+
+  // Added
+  void ProcessMRMLCallbacks(vtkObject* caller, unsigned long event, void* callData);
+  void UpdateFiducial(double xyz[3]);
+
 private:
 
   vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&); // Not implemented
   void operator=(const vtkSlicerPointSubscriberLogic&); // Not implemented
+
+  // Added
+  vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
+  vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr; 
 };
 
 #endif
