@@ -47,7 +47,7 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
   void InitializeSubscriber();
-  void OnPointMessageReceived(const geometry_msgs__msg__PointStamped* msg);
+  // void OnPointMessageReceived(const geometry_msgs__msg__PointStamped* msg);
 
 protected:
   vtkSlicerPointSubscriberLogic();
