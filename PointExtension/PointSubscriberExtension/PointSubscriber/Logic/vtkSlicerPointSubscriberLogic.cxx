@@ -124,39 +124,97 @@ void vtkSlicerPointSubscriberLogic::InitializeSubscriber()
   vtkInfoMacro("Point subscriber initialized.");
 }
 
-
 //------------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
     vtkObject* caller, unsigned long, void*)
 {
+  vtkInfoMacro("ProcessMRMLCallbacks called!");
+  
   auto* sub = vtkMRMLROS2SubscriberNode::SafeDownCast(caller);
   if (!sub)
+  {
+    vtkErrorMacro("Caller is not a subscriber node!");
     return;
+  }
 
-  // Get the last message as a vtkVariant
+  vtkInfoMacro("Getting last message variant...");
   vtkVariant variant = sub->GetLastMessageVariant();
   
-  // Extract the vtkDoubleArray from the variant
   vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(variant.ToVTKObject());
-  if (!arr || arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
+  if (!arr)
+  {
+    vtkErrorMacro("Failed to cast to vtkDoubleArray!");
     return;
+  }
+  
+  vtkInfoMacro("Array has " << arr->GetNumberOfTuples() << " tuples and " 
+               << arr->GetNumberOfComponents() << " components");
+  
+  if (arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
+  {
+    vtkErrorMacro("Array doesn't have enough data!");
+    return;
+  }
 
   double point[3];
   arr->GetTuple(0, point);
-
+  
+  vtkInfoMacro("Received point: [" << point[0] << ", " << point[1] << ", " << point[2] << "]");
+  
   this->UpdateFiducial(point);
 }
 
 //------------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
 {
+  vtkInfoMacro("UpdateFiducial called with: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]");
+  
   if (!this->FiducialNode)
   {
+    vtkInfoMacro("Creating new fiducial node...");
     this->FiducialNode = vtkMRMLMarkupsFiducialNode::New();
+    this->FiducialNode->SetName("ROS2_Point");
     this->GetMRMLScene()->AddNode(this->FiducialNode);
-    this->FiducialNode->AddFiducial(0, 0, 0); // one point initially
+    this->FiducialNode->AddFiducial(0, 0, 0);
+    vtkInfoMacro("Fiducial node created and added to scene");
   }
 
   this->FiducialNode->SetNthControlPointPosition(0, xyz[0], xyz[1], xyz[2]);
+  vtkInfoMacro("Fiducial position updated");
 }
+
+// //------------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
+//     vtkObject* caller, unsigned long, void*)
+// {
+//   auto* sub = vtkMRMLROS2SubscriberNode::SafeDownCast(caller);
+//   if (!sub)
+//     return;
+
+//   // Get the last message as a vtkVariant
+//   vtkVariant variant = sub->GetLastMessageVariant();
+  
+//   // Extract the vtkDoubleArray from the variant
+//   vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(variant.ToVTKObject());
+//   if (!arr || arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
+//     return;
+
+//   double point[3];
+//   arr->GetTuple(0, point);
+
+//   this->UpdateFiducial(point);
+// }
+
+// //------------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
+// {
+//   if (!this->FiducialNode)
+//   {
+//     this->FiducialNode = vtkMRMLMarkupsFiducialNode::New();
+//     this->GetMRMLScene()->AddNode(this->FiducialNode);
+//     this->FiducialNode->AddFiducial(0, 0, 0); // one point initially
+//   }
+
+//   this->FiducialNode->SetNthControlPointPosition(0, xyz[0], xyz[1], xyz[2]);
+// }
 
