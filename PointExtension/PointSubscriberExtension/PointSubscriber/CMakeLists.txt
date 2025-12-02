@@ -11,6 +11,10 @@ add_subdirectory(Widgets)
 # include_directories(
 #   ${Slicer_EXTENSION_INCLUDE_DIR}/slicer_ros2_module
 # )
+#-----------------------------------------------------------------------------
+# Set paths to ROS2 module
+set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
+set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
@@ -21,6 +25,10 @@ set(MODULE_INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}/Logic
   ${CMAKE_CURRENT_SOURCE_DIR}/Widgets
   ${CMAKE_CURRENT_BINARY_DIR}/Widgets
+  ${ROS2_MODULE_SOURCE_DIR}/MRML
+  ${ROS2_MODULE_SOURCE_DIR}/Logic
+  ${ROS2_MODULE_BUILD_DIR}/MRML
+  ${ROS2_MODULE_BUILD_DIR}/Logic
   )
 
 set(MODULE_SRCS
@@ -42,7 +50,9 @@ set(MODULE_UI_SRCS
 set(MODULE_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
   qSlicer${MODULE_NAME}ModuleWidgets
-  slicer_ros2_moduleLogic
+  # slicer_ros2_moduleLogic
+  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleMRML.so
+  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleLogic.so
   )
 
 set(MODULE_RESOURCES
