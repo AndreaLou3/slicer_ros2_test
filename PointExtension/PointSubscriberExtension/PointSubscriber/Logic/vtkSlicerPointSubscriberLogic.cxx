@@ -133,8 +133,11 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
   if (!sub)
     return;
 
-  // Last message is stored as vtkDoubleArray
-  vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(sub->GetLastMessage());
+  // Get the last message as a vtkVariant
+  vtkVariant variant = sub->GetLastMessageVariant();
+  
+  // Extract the vtkDoubleArray from the variant
+  vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(variant.ToVTKObject());
   if (!arr || arr->GetNumberOfTuples() < 1 || arr->GetNumberOfComponents() < 3)
     return;
 
