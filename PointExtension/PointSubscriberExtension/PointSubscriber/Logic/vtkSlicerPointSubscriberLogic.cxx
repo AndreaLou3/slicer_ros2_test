@@ -15,8 +15,8 @@
 
 ==============================================================================*/
 
-// ROSPointSubscriberModule Logic includes
-#include "vtkSlicerROSPointSubscriberModuleLogic.h"
+// PointSubscriber Logic includes
+#include "vtkSlicerPointSubscriberLogic.h"
 
 // MRML includes
 #include <vtkMRMLScene.h>
@@ -30,26 +30,26 @@
 #include <cassert>
 
 //----------------------------------------------------------------------------
-vtkStandardNewMacro(vtkSlicerROSPointSubscriberModuleLogic);
+vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 
 //----------------------------------------------------------------------------
-vtkSlicerROSPointSubscriberModuleLogic::vtkSlicerROSPointSubscriberModuleLogic()
+vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
 {
 }
 
 //----------------------------------------------------------------------------
-vtkSlicerROSPointSubscriberModuleLogic::~vtkSlicerROSPointSubscriberModuleLogic()
+vtkSlicerPointSubscriberLogic::~vtkSlicerPointSubscriberLogic()
 {
 }
 
 //----------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic::PrintSelf(ostream& os, vtkIndent indent)
+void vtkSlicerPointSubscriberLogic::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
 }
 
 //---------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
+void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
 {
   vtkNew<vtkIntArray> events;
   events->InsertNextValue(vtkMRMLScene::NodeAddedEvent);
@@ -59,25 +59,25 @@ void vtkSlicerROSPointSubscriberModuleLogic::SetMRMLSceneInternal(vtkMRMLScene *
 }
 
 //-----------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic::RegisterNodes()
+void vtkSlicerPointSubscriberLogic::RegisterNodes()
 {
   assert(this->GetMRMLScene() != 0);
 }
 
 //---------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic::UpdateFromMRMLScene()
+void vtkSlicerPointSubscriberLogic::UpdateFromMRMLScene()
 {
   assert(this->GetMRMLScene() != 0);
 }
 
 //---------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic
+void vtkSlicerPointSubscriberLogic
 ::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
 {
 }
 
 //---------------------------------------------------------------------------
-void vtkSlicerROSPointSubscriberModuleLogic
+void vtkSlicerPointSubscriberLogic
 ::OnMRMLSceneNodeRemoved(vtkMRMLNode* vtkNotUsed(node))
 {
 }

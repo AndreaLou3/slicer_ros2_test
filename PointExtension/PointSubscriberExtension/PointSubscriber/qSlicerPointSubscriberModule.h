@@ -15,18 +15,18 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerROSPointSubscriberModuleModule_h
-#define __qSlicerROSPointSubscriberModuleModule_h
+#ifndef __qSlicerPointSubscriberModule_h
+#define __qSlicerPointSubscriberModule_h
 
 // Slicer includes
 #include "qSlicerLoadableModule.h"
 
-#include "qSlicerROSPointSubscriberModuleModuleExport.h"
+#include "qSlicerPointSubscriberModuleExport.h"
 
-class qSlicerROSPointSubscriberModuleModulePrivate;
+class qSlicerPointSubscriberModulePrivate;
 
-class Q_SLICER_QTMODULES_ROSPOINTSUBSCRIBERMODULE_EXPORT
-qSlicerROSPointSubscriberModuleModule
+class Q_SLICER_QTMODULES_POINTSUBSCRIBER_EXPORT
+qSlicerPointSubscriberModule
   : public qSlicerLoadableModule
 {
   Q_OBJECT
@@ -36,10 +36,10 @@ qSlicerROSPointSubscriberModuleModule
 public:
 
   typedef qSlicerLoadableModule Superclass;
-  explicit qSlicerROSPointSubscriberModuleModule(QObject *parent=nullptr);
-  ~qSlicerROSPointSubscriberModuleModule() override;
+  explicit qSlicerPointSubscriberModule(QObject *parent=nullptr);
+  ~qSlicerPointSubscriberModule() override;
 
-  qSlicerGetTitleMacro(tr("ROSPointSubscriberModule"));
+  qSlicerGetTitleMacro(tr("PointSubscriber"));
 
   QString helpText()const override;
   QString acknowledgementText()const override;
@@ -62,11 +62,11 @@ protected:
   vtkMRMLAbstractLogic* createLogic() override;
 
 protected:
-  QScopedPointer<qSlicerROSPointSubscriberModuleModulePrivate> d_ptr;
+  QScopedPointer<qSlicerPointSubscriberModulePrivate> d_ptr;
 
 private:
-  Q_DECLARE_PRIVATE(qSlicerROSPointSubscriberModuleModule);
-  Q_DISABLE_COPY(qSlicerROSPointSubscriberModuleModule);
+  Q_DECLARE_PRIVATE(qSlicerPointSubscriberModule);
+  Q_DISABLE_COPY(qSlicerPointSubscriberModule);
 
 };
 

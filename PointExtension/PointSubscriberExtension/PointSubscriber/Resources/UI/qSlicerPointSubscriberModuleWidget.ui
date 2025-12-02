@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>qSlicerROSPointSubscriberModuleModuleWidget</class>
- <widget class="qSlicerWidget" name="qSlicerROSPointSubscriberModuleModuleWidget">
+ <class>qSlicerPointSubscriberModuleWidget</class>
+ <widget class="qSlicerWidget" name="qSlicerPointSubscriberModuleWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ROSPointSubscriberModule</string>
+   <string>PointSubscriber</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -21,7 +21,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="qSlicerROSPointSubscriberModuleFooBarWidget" name="FooBar" native="true"/>
+       <widget class="qSlicerPointSubscriberFooBarWidget" name="FooBar" native="true"/>
       </item>
      </layout>
     </widget>
@@ -55,9 +55,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>qSlicerROSPointSubscriberModuleFooBarWidget</class>
+   <class>qSlicerPointSubscriberFooBarWidget</class>
    <extends>QWidget</extends>
-   <header>qSlicerROSPointSubscriberModuleFooBarWidget.h</header>
+   <header>qSlicerPointSubscriberFooBarWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

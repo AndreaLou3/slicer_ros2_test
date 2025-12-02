@@ -15,14 +15,14 @@
 
 ==============================================================================*/
 
-// .NAME vtkSlicerROSPointSubscriberModuleLogic - slicer logic class for volumes manipulation
+// .NAME vtkSlicerPointSubscriberLogic - slicer logic class for volumes manipulation
 // .SECTION Description
 // This class manages the logic associated with reading, saving,
 // and changing propertied of the volumes
 
 
-#ifndef __vtkSlicerROSPointSubscriberModuleLogic_h
-#define __vtkSlicerROSPointSubscriberModuleLogic_h
+#ifndef __vtkSlicerPointSubscriberLogic_h
+#define __vtkSlicerPointSubscriberLogic_h
 
 // Slicer includes
 #include "vtkSlicerModuleLogic.h"
@@ -32,21 +32,21 @@
 // STD includes
 #include <cstdlib>
 
-#include "vtkSlicerROSPointSubscriberModuleModuleLogicExport.h"
+#include "vtkSlicerPointSubscriberModuleLogicExport.h"
 
 
-class VTK_SLICER_ROSPOINTSUBSCRIBERMODULE_MODULE_LOGIC_EXPORT vtkSlicerROSPointSubscriberModuleLogic :
+class VTK_SLICER_POINTSUBSCRIBER_MODULE_LOGIC_EXPORT vtkSlicerPointSubscriberLogic :
   public vtkSlicerModuleLogic
 {
 public:
 
-  static vtkSlicerROSPointSubscriberModuleLogic *New();
-  vtkTypeMacro(vtkSlicerROSPointSubscriberModuleLogic, vtkSlicerModuleLogic);
+  static vtkSlicerPointSubscriberLogic *New();
+  vtkTypeMacro(vtkSlicerPointSubscriberLogic, vtkSlicerModuleLogic);
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
 protected:
-  vtkSlicerROSPointSubscriberModuleLogic();
-  ~vtkSlicerROSPointSubscriberModuleLogic() override;
+  vtkSlicerPointSubscriberLogic();
+  ~vtkSlicerPointSubscriberLogic() override;
 
   void SetMRMLSceneInternal(vtkMRMLScene* newScene) override;
   /// Register MRML Node classes to Scene. Gets called automatically when the MRMLScene is attached to this logic class.
@@ -56,8 +56,8 @@ protected:
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 private:
 
-  vtkSlicerROSPointSubscriberModuleLogic(const vtkSlicerROSPointSubscriberModuleLogic&); // Not implemented
-  void operator=(const vtkSlicerROSPointSubscriberModuleLogic&); // Not implemented
+  vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&); // Not implemented
+  void operator=(const vtkSlicerPointSubscriberLogic&); // Not implemented
 };
 
 #endif

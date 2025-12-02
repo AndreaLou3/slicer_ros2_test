@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>qSlicerROSPointSubscriberModuleFooBarWidget</class>
- <widget class="QWidget" name="qSlicerROSPointSubscriberModuleFooBarWidget">
+ <class>qSlicerPointSubscriberFooBarWidget</class>
+ <widget class="QWidget" name="qSlicerPointSubscriberFooBarWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

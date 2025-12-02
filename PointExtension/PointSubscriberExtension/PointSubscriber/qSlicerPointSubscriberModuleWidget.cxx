@@ -19,43 +19,43 @@
 #include <QDebug>
 
 // Slicer includes
-#include "qSlicerROSPointSubscriberModuleModuleWidget.h"
-#include "ui_qSlicerROSPointSubscriberModuleModuleWidget.h"
+#include "qSlicerPointSubscriberModuleWidget.h"
+#include "ui_qSlicerPointSubscriberModuleWidget.h"
 
 //-----------------------------------------------------------------------------
-class qSlicerROSPointSubscriberModuleModuleWidgetPrivate: public Ui_qSlicerROSPointSubscriberModuleModuleWidget
+class qSlicerPointSubscriberModuleWidgetPrivate: public Ui_qSlicerPointSubscriberModuleWidget
 {
 public:
-  qSlicerROSPointSubscriberModuleModuleWidgetPrivate();
+  qSlicerPointSubscriberModuleWidgetPrivate();
 };
 
 //-----------------------------------------------------------------------------
-// qSlicerROSPointSubscriberModuleModuleWidgetPrivate methods
+// qSlicerPointSubscriberModuleWidgetPrivate methods
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModuleWidgetPrivate::qSlicerROSPointSubscriberModuleModuleWidgetPrivate()
+qSlicerPointSubscriberModuleWidgetPrivate::qSlicerPointSubscriberModuleWidgetPrivate()
 {
 }
 
 //-----------------------------------------------------------------------------
-// qSlicerROSPointSubscriberModuleModuleWidget methods
+// qSlicerPointSubscriberModuleWidget methods
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModuleWidget::qSlicerROSPointSubscriberModuleModuleWidget(QWidget* _parent)
+qSlicerPointSubscriberModuleWidget::qSlicerPointSubscriberModuleWidget(QWidget* _parent)
   : Superclass( _parent )
-  , d_ptr( new qSlicerROSPointSubscriberModuleModuleWidgetPrivate )
+  , d_ptr( new qSlicerPointSubscriberModuleWidgetPrivate )
 {
 }
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModuleWidget::~qSlicerROSPointSubscriberModuleModuleWidget()
+qSlicerPointSubscriberModuleWidget::~qSlicerPointSubscriberModuleWidget()
 {
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerROSPointSubscriberModuleModuleWidget::setup()
+void qSlicerPointSubscriberModuleWidget::setup()
 {
-  Q_D(qSlicerROSPointSubscriberModuleModuleWidget);
+  Q_D(qSlicerPointSubscriberModuleWidget);
   d->setupUi(this);
   this->Superclass::setup();
 }

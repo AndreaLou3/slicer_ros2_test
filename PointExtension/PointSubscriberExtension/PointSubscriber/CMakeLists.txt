@@ -1,6 +1,6 @@
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME ROSPointSubscriberModule)
+set(MODULE_NAME PointSubscriber)
 
 string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 

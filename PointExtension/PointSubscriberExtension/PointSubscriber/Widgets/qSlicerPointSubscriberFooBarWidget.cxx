@@ -19,53 +19,53 @@
 ==============================================================================*/
 
 // FooBar Widgets includes
-#include "qSlicerROSPointSubscriberModuleFooBarWidget.h"
-#include "ui_qSlicerROSPointSubscriberModuleFooBarWidget.h"
+#include "qSlicerPointSubscriberFooBarWidget.h"
+#include "ui_qSlicerPointSubscriberFooBarWidget.h"
 
 //-----------------------------------------------------------------------------
-class qSlicerROSPointSubscriberModuleFooBarWidgetPrivate
-  : public Ui_qSlicerROSPointSubscriberModuleFooBarWidget
+class qSlicerPointSubscriberFooBarWidgetPrivate
+  : public Ui_qSlicerPointSubscriberFooBarWidget
 {
-  Q_DECLARE_PUBLIC(qSlicerROSPointSubscriberModuleFooBarWidget);
+  Q_DECLARE_PUBLIC(qSlicerPointSubscriberFooBarWidget);
 protected:
-  qSlicerROSPointSubscriberModuleFooBarWidget* const q_ptr;
+  qSlicerPointSubscriberFooBarWidget* const q_ptr;
 
 public:
-  qSlicerROSPointSubscriberModuleFooBarWidgetPrivate(
-    qSlicerROSPointSubscriberModuleFooBarWidget& object);
-  virtual void setupUi(qSlicerROSPointSubscriberModuleFooBarWidget*);
+  qSlicerPointSubscriberFooBarWidgetPrivate(
+    qSlicerPointSubscriberFooBarWidget& object);
+  virtual void setupUi(qSlicerPointSubscriberFooBarWidget*);
 };
 
 // --------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleFooBarWidgetPrivate
-::qSlicerROSPointSubscriberModuleFooBarWidgetPrivate(
-  qSlicerROSPointSubscriberModuleFooBarWidget& object)
+qSlicerPointSubscriberFooBarWidgetPrivate
+::qSlicerPointSubscriberFooBarWidgetPrivate(
+  qSlicerPointSubscriberFooBarWidget& object)
   : q_ptr(&object)
 {
 }
 
 // --------------------------------------------------------------------------
-void qSlicerROSPointSubscriberModuleFooBarWidgetPrivate
-::setupUi(qSlicerROSPointSubscriberModuleFooBarWidget* widget)
+void qSlicerPointSubscriberFooBarWidgetPrivate
+::setupUi(qSlicerPointSubscriberFooBarWidget* widget)
 {
-  this->Ui_qSlicerROSPointSubscriberModuleFooBarWidget::setupUi(widget);
+  this->Ui_qSlicerPointSubscriberFooBarWidget::setupUi(widget);
 }
 
 //-----------------------------------------------------------------------------
-// qSlicerROSPointSubscriberModuleFooBarWidget methods
+// qSlicerPointSubscriberFooBarWidget methods
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleFooBarWidget
-::qSlicerROSPointSubscriberModuleFooBarWidget(QWidget* parentWidget)
+qSlicerPointSubscriberFooBarWidget
+::qSlicerPointSubscriberFooBarWidget(QWidget* parentWidget)
   : Superclass( parentWidget )
-  , d_ptr( new qSlicerROSPointSubscriberModuleFooBarWidgetPrivate(*this) )
+  , d_ptr( new qSlicerPointSubscriberFooBarWidgetPrivate(*this) )
 {
-  Q_D(qSlicerROSPointSubscriberModuleFooBarWidget);
+  Q_D(qSlicerPointSubscriberFooBarWidget);
   d->setupUi(this);
 }
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleFooBarWidget
-::~qSlicerROSPointSubscriberModuleFooBarWidget()
+qSlicerPointSubscriberFooBarWidget
+::~qSlicerPointSubscriberFooBarWidget()
 {
 }

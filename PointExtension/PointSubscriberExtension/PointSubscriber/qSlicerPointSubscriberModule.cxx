@@ -15,57 +15,57 @@
 
 ==============================================================================*/
 
-// ROSPointSubscriberModule Logic includes
-#include <vtkSlicerROSPointSubscriberModuleLogic.h>
+// PointSubscriber Logic includes
+#include <vtkSlicerPointSubscriberLogic.h>
 
-// ROSPointSubscriberModule includes
-#include "qSlicerROSPointSubscriberModuleModule.h"
-#include "qSlicerROSPointSubscriberModuleModuleWidget.h"
+// PointSubscriber includes
+#include "qSlicerPointSubscriberModule.h"
+#include "qSlicerPointSubscriberModuleWidget.h"
 
 //-----------------------------------------------------------------------------
-class qSlicerROSPointSubscriberModuleModulePrivate
+class qSlicerPointSubscriberModulePrivate
 {
 public:
-  qSlicerROSPointSubscriberModuleModulePrivate();
+  qSlicerPointSubscriberModulePrivate();
 };
 
 //-----------------------------------------------------------------------------
-// qSlicerROSPointSubscriberModuleModulePrivate methods
+// qSlicerPointSubscriberModulePrivate methods
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModulePrivate::qSlicerROSPointSubscriberModuleModulePrivate()
+qSlicerPointSubscriberModulePrivate::qSlicerPointSubscriberModulePrivate()
 {
 }
 
 //-----------------------------------------------------------------------------
-// qSlicerROSPointSubscriberModuleModule methods
+// qSlicerPointSubscriberModule methods
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModule::qSlicerROSPointSubscriberModuleModule(QObject* _parent)
+qSlicerPointSubscriberModule::qSlicerPointSubscriberModule(QObject* _parent)
   : Superclass(_parent)
-  , d_ptr(new qSlicerROSPointSubscriberModuleModulePrivate)
+  , d_ptr(new qSlicerPointSubscriberModulePrivate)
 {
 }
 
 //-----------------------------------------------------------------------------
-qSlicerROSPointSubscriberModuleModule::~qSlicerROSPointSubscriberModuleModule()
+qSlicerPointSubscriberModule::~qSlicerPointSubscriberModule()
 {
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerROSPointSubscriberModuleModule::helpText() const
+QString qSlicerPointSubscriberModule::helpText() const
 {
   return "This is a loadable module that can be bundled in an extension";
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerROSPointSubscriberModuleModule::acknowledgementText() const
+QString qSlicerPointSubscriberModule::acknowledgementText() const
 {
   return "This work was partially funded by NIH grant NXNNXXNNNNNN-NNXN";
 }
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerROSPointSubscriberModuleModule::contributors() const
+QStringList qSlicerPointSubscriberModule::contributors() const
 {
   QStringList moduleContributors;
   moduleContributors << QString("John Doe (AnyWare Corp.)");
@@ -73,38 +73,38 @@ QStringList qSlicerROSPointSubscriberModuleModule::contributors() const
 }
 
 //-----------------------------------------------------------------------------
-QIcon qSlicerROSPointSubscriberModuleModule::icon() const
+QIcon qSlicerPointSubscriberModule::icon() const
 {
-  return QIcon(":/Icons/ROSPointSubscriberModule.png");
+  return QIcon(":/Icons/PointSubscriber.png");
 }
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerROSPointSubscriberModuleModule::categories() const
+QStringList qSlicerPointSubscriberModule::categories() const
 {
   return QStringList() << "Examples";
 }
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerROSPointSubscriberModuleModule::dependencies() const
+QStringList qSlicerPointSubscriberModule::dependencies() const
 {
   return QStringList();
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerROSPointSubscriberModuleModule::setup()
+void qSlicerPointSubscriberModule::setup()
 {
   this->Superclass::setup();
 }
 
 //-----------------------------------------------------------------------------
-qSlicerAbstractModuleRepresentation* qSlicerROSPointSubscriberModuleModule
+qSlicerAbstractModuleRepresentation* qSlicerPointSubscriberModule
 ::createWidgetRepresentation()
 {
-  return new qSlicerROSPointSubscriberModuleModuleWidget;
+  return new qSlicerPointSubscriberModuleWidget;
 }
 
 //-----------------------------------------------------------------------------
-vtkMRMLAbstractLogic* qSlicerROSPointSubscriberModuleModule::createLogic()
+vtkMRMLAbstractLogic* qSlicerPointSubscriberModule::createLogic()
 {
-  return vtkSlicerROSPointSubscriberModuleLogic::New();
+  return vtkSlicerPointSubscriberLogic::New();
 }

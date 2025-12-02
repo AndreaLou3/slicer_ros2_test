@@ -15,18 +15,18 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerROSPointSubscriberModuleModuleWidget_h
-#define __qSlicerROSPointSubscriberModuleModuleWidget_h
+#ifndef __qSlicerPointSubscriberModuleWidget_h
+#define __qSlicerPointSubscriberModuleWidget_h
 
 // Slicer includes
 #include "qSlicerAbstractModuleWidget.h"
 
-#include "qSlicerROSPointSubscriberModuleModuleExport.h"
+#include "qSlicerPointSubscriberModuleExport.h"
 
-class qSlicerROSPointSubscriberModuleModuleWidgetPrivate;
+class qSlicerPointSubscriberModuleWidgetPrivate;
 class vtkMRMLNode;
 
-class Q_SLICER_QTMODULES_ROSPOINTSUBSCRIBERMODULE_EXPORT qSlicerROSPointSubscriberModuleModuleWidget :
+class Q_SLICER_QTMODULES_POINTSUBSCRIBER_EXPORT qSlicerPointSubscriberModuleWidget :
   public qSlicerAbstractModuleWidget
 {
   Q_OBJECT
@@ -34,20 +34,20 @@ class Q_SLICER_QTMODULES_ROSPOINTSUBSCRIBERMODULE_EXPORT qSlicerROSPointSubscrib
 public:
 
   typedef qSlicerAbstractModuleWidget Superclass;
-  qSlicerROSPointSubscriberModuleModuleWidget(QWidget *parent=0);
-  virtual ~qSlicerROSPointSubscriberModuleModuleWidget();
+  qSlicerPointSubscriberModuleWidget(QWidget *parent=0);
+  virtual ~qSlicerPointSubscriberModuleWidget();
 
 public slots:
 
 
 protected:
-  QScopedPointer<qSlicerROSPointSubscriberModuleModuleWidgetPrivate> d_ptr;
+  QScopedPointer<qSlicerPointSubscriberModuleWidgetPrivate> d_ptr;
 
   void setup() override;
 
 private:
-  Q_DECLARE_PRIVATE(qSlicerROSPointSubscriberModuleModuleWidget);
-  Q_DISABLE_COPY(qSlicerROSPointSubscriberModuleModuleWidget);
+  Q_DECLARE_PRIVATE(qSlicerPointSubscriberModuleWidget);
+  Q_DISABLE_COPY(qSlicerPointSubscriberModuleWidget);
 };
 
 #endif

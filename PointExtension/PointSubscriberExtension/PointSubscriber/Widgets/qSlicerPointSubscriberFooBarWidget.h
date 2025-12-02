@@ -18,34 +18,34 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerROSPointSubscriberModuleFooBarWidget_h
-#define __qSlicerROSPointSubscriberModuleFooBarWidget_h
+#ifndef __qSlicerPointSubscriberFooBarWidget_h
+#define __qSlicerPointSubscriberFooBarWidget_h
 
 // Qt includes
 #include <QWidget>
 
 // FooBar Widgets includes
-#include "qSlicerROSPointSubscriberModuleModuleWidgetsExport.h"
+#include "qSlicerPointSubscriberModuleWidgetsExport.h"
 
-class qSlicerROSPointSubscriberModuleFooBarWidgetPrivate;
+class qSlicerPointSubscriberFooBarWidgetPrivate;
 
-class Q_SLICER_MODULE_ROSPOINTSUBSCRIBERMODULE_WIDGETS_EXPORT qSlicerROSPointSubscriberModuleFooBarWidget
+class Q_SLICER_MODULE_POINTSUBSCRIBER_WIDGETS_EXPORT qSlicerPointSubscriberFooBarWidget
   : public QWidget
 {
   Q_OBJECT
 public:
   typedef QWidget Superclass;
-  qSlicerROSPointSubscriberModuleFooBarWidget(QWidget *parent=0);
-  ~qSlicerROSPointSubscriberModuleFooBarWidget() override;
+  qSlicerPointSubscriberFooBarWidget(QWidget *parent=0);
+  ~qSlicerPointSubscriberFooBarWidget() override;
 
 protected slots:
 
 protected:
-  QScopedPointer<qSlicerROSPointSubscriberModuleFooBarWidgetPrivate> d_ptr;
+  QScopedPointer<qSlicerPointSubscriberFooBarWidgetPrivate> d_ptr;
 
 private:
-  Q_DECLARE_PRIVATE(qSlicerROSPointSubscriberModuleFooBarWidget);
-  Q_DISABLE_COPY(qSlicerROSPointSubscriberModuleFooBarWidget);
+  Q_DECLARE_PRIVATE(qSlicerPointSubscriberFooBarWidget);
+  Q_DISABLE_COPY(qSlicerPointSubscriberFooBarWidget);
 };
 
 #endif
