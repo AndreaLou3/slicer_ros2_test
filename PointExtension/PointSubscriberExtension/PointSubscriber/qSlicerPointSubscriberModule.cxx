@@ -95,13 +95,21 @@ void qSlicerPointSubscriberModule::setup()
 {
   this->Superclass::setup();
   
+  std::cout << "=== PointSubscriber Module Setup Called ===" << std::endl;
+  
   // Initialize the subscriber when module loads
   vtkSlicerPointSubscriberLogic* logic = 
     vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
-  if (logic)
+  
+  if (!logic)
   {
-    logic->InitializeSubscriber();
+    std::cerr << "ERROR: Failed to get logic!" << std::endl;
+    return;
   }
+  
+  std::cout << "Logic obtained, calling InitializeSubscriber..." << std::endl;
+  logic->InitializeSubscriber();
+  std::cout << "InitializeSubscriber called" << std::endl;
 }
 
 //-----------------------------------------------------------------------------
