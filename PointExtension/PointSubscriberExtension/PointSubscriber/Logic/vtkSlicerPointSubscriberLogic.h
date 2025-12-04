@@ -30,6 +30,8 @@
 // MRML includes
 #include <vtkMRMLMarkupsFiducialNode.h>
 #include <vtkMRMLROS2SubscriberNode.h> 
+#include <vtkMRMLROS2PublisherNode.h>
+
 
 // STD includes
 #include <cstdlib>
