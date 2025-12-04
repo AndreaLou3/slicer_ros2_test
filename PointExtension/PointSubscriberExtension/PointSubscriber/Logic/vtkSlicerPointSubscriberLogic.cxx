@@ -239,15 +239,15 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
     return;
   }
 
-  // Create a DoubleArray publisher for xyz
-  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/clicked_point_topic");
-  if (!pub)
-  {
-    vtkErrorMacro("Failed to create publisher!");
-    return;
-  }
+  // // Create a DoubleArray publisher for xyz
+  // auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/clicked_point_topic");
+  // if (!pub)
+  // {
+  //   vtkErrorMacro("Failed to create publisher!");
+  //   return;
+  // }
 
-  this->PointPublisherNode = pub;
+  // this->PointPublisherNode = pub;
 
   vtkInfoMacro("Point publisher initialized on topic: /clicked_point_topic");
 }
