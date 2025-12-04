@@ -44,7 +44,7 @@ vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
   : PointSubscriberNode(nullptr)
   , FiducialNode(nullptr)
-  , PointPublisherNode(nullptr)
+  // , PointPublisherNode(nullptr)
 {
 }
 

@@ -53,7 +53,7 @@ public:
   void InitializePublisher();
 
   // Publish a point to ROS2
-  void PublishPoint(double xyz[3]);
+  // void PublishPoint(double xyz[3]);
 
 protected:
   vtkSlicerPointSubscriberLogic();
@@ -69,7 +69,7 @@ protected:
   void ProcessMRMLCallbacks(vtkObject* caller, unsigned long event, void* callData);
   void UpdateFiducial(double xyz[3]);
 
-  vtkMRMLROS2PublisherNode* PointPublisherNode;
+  // vtkMRMLROS2PublisherNode* PointPublisherNode;
 
 private:
 
