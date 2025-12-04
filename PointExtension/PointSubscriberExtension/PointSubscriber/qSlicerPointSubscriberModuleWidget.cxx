@@ -1,34 +1,28 @@
-/*==============================================================================
-
-  Program: 3D Slicer
-
-  Portions (c) Copyright Brigham and Women's Hospital (BWH) All Rights Reserved.
-
-  See COPYRIGHT.txt
-  or http://www.slicer.org/copyright/copyright.txt for details.
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-
-==============================================================================*/
-
 // Qt includes
 #include <QDebug>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QString>
 
 // Slicer includes
 #include "qSlicerPointSubscriberModuleWidget.h"
 #include "ui_qSlicerPointSubscriberModuleWidget.h"
-
-#include "vtkSlicerPointSubscriberLogic.h"
-
 #include <qSlicerApplication.h>
 #include <qSlicerLayoutManager.h>
 #include <qMRMLThreeDView.h>
 #include <qMRMLThreeDWidget.h>
+#include <qSlicerPythonManager.h>
 
+// Logic includes
+#include "vtkSlicerPointSubscriberLogic.h"
+
+// MRML includes
+#include <vtkMRMLScene.h>
+#include <vtkMRMLMarkupsFiducialNode.h>
+
+// VTK includes
 #include <vtkCommand.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
@@ -36,15 +30,13 @@
 #include <vtkWorldPointPicker.h>
 #include <vtkNew.h>
 
-#include <qSlicerPythonManager.h>
-
 // ADDED: Custom callback class for handling clicks
 class ClickCallback : public vtkCommand
 {
 public:
   static ClickCallback* New() { return new ClickCallback; }
   
-  void Execute(vtkObject* caller, unsigned long eventId, void* callData) override
+  void Execute(vtkObject* /*caller*/, unsigned long eventId, void* /*callData*/) override
   {
     if (eventId == vtkCommand::LeftButtonPressEvent && this->Widget)
     {
@@ -56,11 +48,19 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-class qSlicerPointSubscriberModuleWidgetPrivate: public Ui_qSlicerPointSubscriberModuleWidget
+/// \ingroup Slicer_QtModules_ExtensionTemplate
+class qSlicerPointSubscriberModuleWidgetPrivate
+  : public Ui_qSlicerPointSubscriberModuleWidget
 {
-public:
-  qSlicerPointSubscriberModuleWidgetPrivate();
+  Q_DECLARE_PUBLIC(qSlicerPointSubscriberModuleWidget);
+protected:
+  qSlicerPointSubscriberModuleWidget* const q_ptr;
 
+public:
+  qSlicerPointSubscriberModuleWidgetPrivate(
+    qSlicerPointSubscriberModuleWidget& object);
+  vtkSlicerPointSubscriberLogic* logic() const;
+  
   // ADDED: UI elements
   QPushButton* StartSubscriberButton;
   QCheckBox* EnableClickPublishCheckbox;
@@ -71,8 +71,19 @@ public:
 // qSlicerPointSubscriberModuleWidgetPrivate methods
 
 //-----------------------------------------------------------------------------
-qSlicerPointSubscriberModuleWidgetPrivate::qSlicerPointSubscriberModuleWidgetPrivate()
+qSlicerPointSubscriberModuleWidgetPrivate
+::qSlicerPointSubscriberModuleWidgetPrivate(
+  qSlicerPointSubscriberModuleWidget& object)
+  : q_ptr(&object)
 {
+}
+
+//-----------------------------------------------------------------------------
+vtkSlicerPointSubscriberLogic*
+qSlicerPointSubscriberModuleWidgetPrivate::logic() const
+{
+  Q_Q(const qSlicerPointSubscriberModuleWidget);
+  return vtkSlicerPointSubscriberLogic::SafeDownCast(q->logic());
 }
 
 //-----------------------------------------------------------------------------
@@ -81,13 +92,16 @@ qSlicerPointSubscriberModuleWidgetPrivate::qSlicerPointSubscriberModuleWidgetPri
 //-----------------------------------------------------------------------------
 qSlicerPointSubscriberModuleWidget::qSlicerPointSubscriberModuleWidget(QWidget* _parent)
   : Superclass( _parent )
-  , d_ptr( new qSlicerPointSubscriberModuleWidgetPrivate )
+  , d_ptr( new qSlicerPointSubscriberModuleWidgetPrivate(*this) )
+  , ClickObserver(nullptr)
+  , ClickObserverTag(0)
 {
 }
 
 //-----------------------------------------------------------------------------
 qSlicerPointSubscriberModuleWidget::~qSlicerPointSubscriberModuleWidget()
 {
+  cleanupClickInteractor();
 }
 
 //-----------------------------------------------------------------------------
@@ -96,8 +110,8 @@ void qSlicerPointSubscriberModuleWidget::setup()
   Q_D(qSlicerPointSubscriberModuleWidget);
   d->setupUi(this);
   this->Superclass::setup();
-
-  // Create custom UI elements
+  
+  // ADDED: Create custom UI elements
   QVBoxLayout* layout = new QVBoxLayout();
   
   // Start Subscriber button
@@ -119,7 +133,7 @@ void qSlicerPointSubscriberModuleWidget::setup()
   // Add layout to the widget
   this->layout()->addItem(layout);
   
-  // Auto-start the subscriber
+  // Auto-start the subscriber and publisher
   vtkSlicerPointSubscriberLogic* logic = d->logic();
   if (logic)
   {
@@ -127,15 +141,8 @@ void qSlicerPointSubscriberModuleWidget::setup()
     logic->InitializePublisher();
     d->StatusLabel->setText("Status: Subscriber and Publisher initialized");
   }
-
-  // auto logic = vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
-  // if (logic)
-  // {
-  //   logic->InitializeSubscriber();
-  // }
 }
 
-// new methods
 //-----------------------------------------------------------------------------
 void qSlicerPointSubscriberModuleWidget::onStartSubscriberClicked()
 {
