@@ -188,13 +188,13 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
       displayNode->SetSelectedColor(1.0, 0.0, 0.0);
     }
 
-    // ADDED: Configure slice view visibility
-    // This makes the point visible in 2D slice views even with volumes loaded
-    displayNode->SetSliceProjection(true);  // Enable projection onto slices
-    displayNode->SetSliceProjectionUseFiducialColor(true);  // Use the fiducial's color
-    displayNode->SetSliceProjectionOutlinedBehindSlicePlane(true);  // Show outline when behind
-    displayNode->SetSliceProjectionColor(1.0, 0.0, 0.0);  // Red projection
-    displayNode->SetSliceProjectionOpacity(1.0);  // Fully opaque
+    // Fix: make point visible in 2D slice views with volumes loaded
+    displayNode->SetSliceProjection(true);
+    displayNode->SetSliceProjectionUseFiducialColor(true);
+    // Show outline when behind
+    displayNode->SetSliceProjectionOutlinedBehindSlicePlane(true);
+    displayNode->SetSliceProjectionColor(1.0, 0.0, 0.0);
+    displayNode->SetSliceProjectionOpacity(1.0);
     
     vtkInfoMacro("Fiducial node created");
   }
@@ -214,21 +214,3 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
   }
 }
 
-// //------------------------------------------------------------------------------
-// void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
-// {
-//   vtkInfoMacro("UpdateFiducial called with: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]");
-  
-//   if (!this->FiducialNode)
-//   {
-//     vtkInfoMacro("Creating new fiducial node...");
-//     this->FiducialNode = vtkMRMLMarkupsFiducialNode::New();
-//     this->FiducialNode->SetName("ROS2_Point");
-//     this->GetMRMLScene()->AddNode(this->FiducialNode);
-//     this->FiducialNode->AddFiducial(0, 0, 0);
-//     vtkInfoMacro("Fiducial node created and added to scene");
-//   }
-
-//   this->FiducialNode->SetNthControlPointPosition(0, xyz[0], xyz[1], xyz[2]);
-//   vtkInfoMacro("Fiducial position updated");
-// }
