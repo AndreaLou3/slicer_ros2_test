@@ -31,6 +31,8 @@
 #include <vtkMRMLROS2SubscriberNode.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
 
+#include <vtkMRMLROS2PublisherNode.h>
+#include <vtkDoubleArray.h>
 
 // STD includes
 #include <cassert>
@@ -41,6 +43,9 @@ vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
 {
+  : PointSubscriberNode(nullptr)
+  , FiducialNode(nullptr)
+  , PointPublisherNode(nullptr)
 }
 
 //----------------------------------------------------------------------------
@@ -214,3 +219,59 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
   }
 }
 
+// publisher methods
+//------------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::InitializePublisher()
+{
+  vtkMRMLScene* scene = this->GetMRMLScene();
+  if (!scene)
+  {
+    vtkErrorMacro("Cannot initialize publisher: no scene found.");
+    return;
+  }
+
+  // Find the active ROS2 node in the scene
+  auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(
+      scene->GetFirstNodeByClass("vtkMRMLROS2NodeNode"));
+  if (!rosNode)
+  {
+    vtkErrorMacro("No ROS2 node exists! Start the Slicer ROS2 module first.");
+    return;
+  }
+
+  // Create a DoubleArray publisher for xyz
+  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/clicked_point_topic");
+  if (!pub)
+  {
+    vtkErrorMacro("Failed to create publisher!");
+    return;
+  }
+
+  this->PointPublisherNode = pub;
+
+  vtkInfoMacro("Point publisher initialized on topic: /clicked_point_topic");
+}
+
+//------------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::PublishPoint(double xyz[3])
+{
+  if (!this->PointPublisherNode)
+  {
+    vtkErrorMacro("Publisher not initialized!");
+    return;
+  }
+
+  // Create a vtkDoubleArray with the 3 coordinates
+  vtkNew<vtkDoubleArray> arr;
+  arr->SetNumberOfComponents(1);
+  arr->SetNumberOfTuples(3);
+  arr->SetValue(0, xyz[0]);
+  arr->SetValue(1, xyz[1]);
+  arr->SetValue(2, xyz[2]);
+
+  // Publish the array
+  vtkVariant variant(arr.GetPointer());
+  this->PointPublisherNode->SetInputData(variant);
+  
+  std::cout << "Published point: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]" << std::endl;
+}

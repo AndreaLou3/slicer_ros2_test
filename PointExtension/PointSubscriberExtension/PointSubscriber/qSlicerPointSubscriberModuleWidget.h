@@ -26,6 +26,10 @@
 class qSlicerPointSubscriberModuleWidgetPrivate;
 class vtkMRMLNode;
 
+// ADDED: Forward declarations for click handling
+class vtkObject;
+class vtkCommand;
+
 class Q_SLICER_QTMODULES_POINTSUBSCRIBER_EXPORT qSlicerPointSubscriberModuleWidget :
   public qSlicerAbstractModuleWidget
 {
@@ -38,16 +42,27 @@ public:
   virtual ~qSlicerPointSubscriberModuleWidget();
 
 public slots:
+  // ADDED: Slots for UI interactions
+  void onStartSubscriberClicked();
+  void onEnableClickPublishToggled(bool enabled);
 
 
 protected:
   QScopedPointer<qSlicerPointSubscriberModuleWidgetPrivate> d_ptr;
 
   void setup() override;
+  
+  // ADDED: Methods for click handling
+  void setupClickInteractor();
+  void cleanupClickInteractor();
 
 private:
   Q_DECLARE_PRIVATE(qSlicerPointSubscriberModuleWidget);
   Q_DISABLE_COPY(qSlicerPointSubscriberModuleWidget);
+
+  // ADDED: Member variables for click interaction
+  vtkCommand* ClickObserver;
+  unsigned long ClickObserverTag;
 };
 
 #endif

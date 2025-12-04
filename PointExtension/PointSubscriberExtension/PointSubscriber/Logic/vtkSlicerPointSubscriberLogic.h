@@ -49,6 +49,12 @@ public:
   void InitializeSubscriber();
   // void OnPointMessageReceived(const geometry_msgs__msg__PointStamped* msg);
 
+  // Initialize the ROS2 publisher
+  void InitializePublisher();
+
+  // Publish a point to ROS2
+  void PublishPoint(double xyz[3]);
+
 protected:
   vtkSlicerPointSubscriberLogic();
   ~vtkSlicerPointSubscriberLogic() override;
@@ -60,9 +66,10 @@ protected:
   void OnMRMLSceneNodeAdded(vtkMRMLNode* node) override;
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 
-  // Added
   void ProcessMRMLCallbacks(vtkObject* caller, unsigned long event, void* callData);
   void UpdateFiducial(double xyz[3]);
+
+  vtkMRMLROS2PublisherNode* PointPublisherNode;
 
 private:
 
