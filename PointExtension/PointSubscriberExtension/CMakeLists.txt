@@ -17,9 +17,6 @@ set(EXTENSION_DEPENDS "slicer_ros2_module") # Specified as a list or "NA" if no 
 find_package(Slicer REQUIRED)
 include(${Slicer_USE_FILE})
 
-# # Find the ROS2 module
-# find_package(slicer_ros2_module REQUIRED)
-
 #-----------------------------------------------------------------------------
 # Extension modules
 add_subdirectory(PointSubscriber)

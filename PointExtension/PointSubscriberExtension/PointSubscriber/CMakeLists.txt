@@ -8,9 +8,6 @@ string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 add_subdirectory(Logic)
 add_subdirectory(Widgets)
 
-# include_directories(
-#   ${Slicer_EXTENSION_INCLUDE_DIR}/slicer_ros2_module
-# )
 #-----------------------------------------------------------------------------
 # Set paths to ROS2 module
 set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")

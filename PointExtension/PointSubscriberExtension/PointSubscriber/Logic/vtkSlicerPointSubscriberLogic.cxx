@@ -175,10 +175,7 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
     this->FiducialNode = vtkMRMLMarkupsFiducialNode::New();
     this->FiducialNode->SetName("ROS2_Point");
     this->GetMRMLScene()->AddNode(this->FiducialNode);
-    
-    // DON'T add a control point here with potentially bad data
-    // We'll add it below with the actual received data
-    
+
     // Make it visible and styled
     this->FiducialNode->SetDisplayVisibility(true);
     
@@ -187,14 +184,14 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
     if (displayNode)
     {
       displayNode->SetVisibility(true);
-      displayNode->SetGlyphScale(5.0);
+      displayNode->SetGlyphScale(1.0);
       displayNode->SetSelectedColor(1.0, 0.0, 0.0);
     }
     
     vtkInfoMacro("Fiducial node created");
   }
   
-  // Now update or add the control point with valid data
+  // Update or add the control point with valid data
   if (this->FiducialNode->GetNumberOfControlPoints() == 0)
   {
     // First time - add the control point
