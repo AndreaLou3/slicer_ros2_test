@@ -69,7 +69,7 @@ protected:
   void ProcessMRMLCallbacks(vtkObject* caller, unsigned long event, void* callData);
   void UpdateFiducial(double xyz[3]);
 
-  // vtkMRMLROS2PublisherNode* PointPublisherNode;
+  vtkMRMLROS2PublisherNode* PointPublisherNode;
 
 private:
 
