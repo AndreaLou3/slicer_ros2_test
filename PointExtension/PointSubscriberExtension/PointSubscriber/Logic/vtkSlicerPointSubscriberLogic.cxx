@@ -42,10 +42,10 @@ vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
-{
   : PointSubscriberNode(nullptr)
   , FiducialNode(nullptr)
   , PointPublisherNode(nullptr)
+{
 }
 
 //----------------------------------------------------------------------------
@@ -253,25 +253,25 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
 }
 
 //------------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic::PublishPoint(double xyz[3])
-{
-  if (!this->PointPublisherNode)
-  {
-    vtkErrorMacro("Publisher not initialized!");
-    return;
-  }
+// void vtkSlicerPointSubscriberLogic::PublishPoint(double xyz[3])
+// {
+//   if (!this->PointPublisherNode)
+//   {
+//     vtkErrorMacro("Publisher not initialized!");
+//     return;
+//   }
 
-  // Create a vtkDoubleArray with the 3 coordinates
-  vtkNew<vtkDoubleArray> arr;
-  arr->SetNumberOfComponents(1);
-  arr->SetNumberOfTuples(3);
-  arr->SetValue(0, xyz[0]);
-  arr->SetValue(1, xyz[1]);
-  arr->SetValue(2, xyz[2]);
+//   // Create a vtkDoubleArray with the 3 coordinates
+//   vtkNew<vtkDoubleArray> arr;
+//   arr->SetNumberOfComponents(1);
+//   arr->SetNumberOfTuples(3);
+//   arr->SetValue(0, xyz[0]);
+//   arr->SetValue(1, xyz[1]);
+//   arr->SetValue(2, xyz[2]);
 
-  // Publish the array
-  vtkVariant variant(arr.GetPointer());
-  this->PointPublisherNode->SetInputData(variant);
+//   // Publish the array
+//   vtkVariant variant(arr.GetPointer());
+//   this->PointPublisherNode->SetInputData(variant);
   
-  std::cout << "Published point: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]" << std::endl;
-}
+//   std::cout << "Published point: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]" << std::endl;
+// }

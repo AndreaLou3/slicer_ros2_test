@@ -41,6 +41,8 @@ public:
   qSlicerPointSubscriberModuleWidget(QWidget *parent=0);
   virtual ~qSlicerPointSubscriberModuleWidget();
 
+  void handleClick();
+
 public slots:
   // ADDED: Slots for UI interactions
   void onStartSubscriberClicked();

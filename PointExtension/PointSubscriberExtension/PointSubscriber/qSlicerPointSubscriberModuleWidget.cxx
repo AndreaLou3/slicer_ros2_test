@@ -29,6 +29,15 @@
 #include <qMRMLThreeDView.h>
 #include <qMRMLThreeDWidget.h>
 
+#include <vtkCommand.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
+#include <vtkCamera.h>
+#include <vtkWorldPointPicker.h>
+#include <vtkNew.h>
+
+#include <qSlicerPythonManager.h>
+
 // ADDED: Custom callback class for handling clicks
 class ClickCallback : public vtkCommand
 {
@@ -88,8 +97,7 @@ void qSlicerPointSubscriberModuleWidget::setup()
   d->setupUi(this);
   this->Superclass::setup();
 
-    
-  // ADDED: Create custom UI elements
+  // Create custom UI elements
   QVBoxLayout* layout = new QVBoxLayout();
   
   // Start Subscriber button
@@ -235,12 +243,23 @@ void qSlicerPointSubscriberModuleWidget::handleClick()
   std::cout << "Clicked at 3D position: [" << worldPos[0] << ", " 
             << worldPos[1] << ", " << worldPos[2] << "]" << std::endl;
   
-  // Publish the clicked point
-  vtkSlicerPointSubscriberLogic* logic = d->logic();
-  if (logic)
-  {
-    logic->PublishPoint(worldPos);
-    d->StatusLabel->setText(QString("Published: [%1, %2, %3]")
-      .arg(worldPos[0]).arg(worldPos[1]).arg(worldPos[2]));
-  }
+  // Publish using Python
+  QString pythonCode = QString(
+    "import vtk\n"
+    "scene = slicer.mrmlScene\n"
+    "pubNode = scene.GetFirstNodeByName('ros2:pub:/clicked_point_topic')\n"
+    "if pubNode:\n"
+    "    arr = vtk.vtkDoubleArray()\n"
+    "    arr.SetNumberOfValues(3)\n"
+    "    arr.SetValue(0, %1)\n"
+    "    arr.SetValue(1, %2)\n"
+    "    arr.SetValue(2, %3)\n"
+    "    pubNode.Publish(arr)\n"
+    "    print('Published: [%1, %2, %3]')\n"
+  ).arg(worldPos[0]).arg(worldPos[1]).arg(worldPos[2]);
+  
+  qSlicerApplication::application()->pythonManager()->executeString(pythonCode);
+  
+  d->StatusLabel->setText(QString("Published: [%1, %2, %3]")
+    .arg(worldPos[0]).arg(worldPos[1]).arg(worldPos[2]));
 }
