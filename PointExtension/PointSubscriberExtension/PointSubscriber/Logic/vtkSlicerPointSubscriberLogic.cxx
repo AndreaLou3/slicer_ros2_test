@@ -184,6 +184,7 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
     if (displayNode)
     {
       displayNode->SetVisibility(true);
+      displayNode->SetVisibility2D(true);
       displayNode->SetGlyphScale(1.0);
       displayNode->SetSelectedColor(1.0, 0.0, 0.0);
     }
