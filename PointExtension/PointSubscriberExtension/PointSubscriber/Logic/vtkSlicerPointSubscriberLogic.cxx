@@ -187,6 +187,14 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
       displayNode->SetGlyphScale(1.0);
       displayNode->SetSelectedColor(1.0, 0.0, 0.0);
     }
+
+    // ADDED: Configure slice view visibility
+    // This makes the point visible in 2D slice views even with volumes loaded
+    displayNode->SetSliceProjection(true);  // Enable projection onto slices
+    displayNode->SetSliceProjectionUseFiducialColor(true);  // Use the fiducial's color
+    displayNode->SetSliceProjectionOutlinedBehindSlicePlane(true);  // Show outline when behind
+    displayNode->SetSliceProjectionColor(1.0, 0.0, 0.0);  // Red projection
+    displayNode->SetSliceProjectionOpacity(1.0);  // Fully opaque
     
     vtkInfoMacro("Fiducial node created");
   }
