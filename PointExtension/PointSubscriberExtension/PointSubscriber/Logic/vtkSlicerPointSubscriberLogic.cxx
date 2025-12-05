@@ -240,7 +240,9 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   }
 
   // Create a DoubleArray publisher for xyz
-  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/clicked_point_topic");
+  if (!this->PointPublisherNode){
+    auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/clicked_point_topic");
+  }
   if (!pub)
   {
     vtkErrorMacro("Failed to create publisher!");
@@ -275,3 +277,40 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   
 //   std::cout << "Published point: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]" << std::endl;
 // }
+
+// Added for button click publishing
+void qSlicerPointSubscriberModuleLogic::PublishTaggedPoint(const std::string& label)
+{
+  vtkMRMLMarkupsFiducialNode* markupsNode =
+      vtkMRMLMarkupsFiducialNode::SafeDownCast(
+          this->GetMRMLScene()->GetFirstNodeByClass("vtkMRMLMarkupsFiducialNode"));
+
+  if (!markupsNode)
+  {
+    qWarning() << "No Markups node found!";
+    return;
+  }
+
+  int index = markupsNode->GetControlPointIndexByLabel(label.c_str());
+  if (index < 0)
+  {
+    qWarning() << "Tagged point '" << label.c_str() << "' not found!";
+    return;
+  }
+
+  double p[3];
+  markupsNode->GetNthControlPointPosition(index, p);
+
+  // ⬇ Send p[0], p[1], p[2] to ROS publisher
+  vtkNew<vtkDoubleArray> arr;
+  arr->SetNumberOfComponents(1);
+  arr->SetNumberOfTuples(3);
+  arr->SetValue(0, p[0]);
+  arr->SetValue(1, p[1]);
+  arr->SetValue(2, p[2]);
+
+  vtkVariant variant(arr.GetPointer());
+  this->PointPublisherNode->SetInputData(variant);
+  this->PointPublisherNode->Publish();
+
+}

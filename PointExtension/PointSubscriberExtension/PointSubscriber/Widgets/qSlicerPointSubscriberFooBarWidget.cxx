@@ -62,10 +62,29 @@ qSlicerPointSubscriberFooBarWidget
 {
   Q_D(qSlicerPointSubscriberFooBarWidget);
   d->setupUi(this);
+  connect(d->publishPointButton, &QPushButton::clicked,
+          this, &qSlicerPointSubscriberFooBarWidget::onPublishPointButtonClicked);
 }
 
 //-----------------------------------------------------------------------------
 qSlicerPointSubscriberFooBarWidget
 ::~qSlicerPointSubscriberFooBarWidget()
 {
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerPointSubscriberFooBarWidget::onPublishPointButtonClicked()
+{
+  // Access module logic
+  qSlicerAbstractLogic* baseLogic =
+      qSlicerCoreApplication::application()->moduleLogic("PointSubscriber");
+
+  auto logic = qobject_cast<qSlicerPointSubscriberModuleLogic*>(baseLogic);
+  if (!logic)
+    {
+      qWarning("PointSubscriber logic not available!");
+      return;
+    }
+
+  logic->PublishTaggedPoint("goal");
 }

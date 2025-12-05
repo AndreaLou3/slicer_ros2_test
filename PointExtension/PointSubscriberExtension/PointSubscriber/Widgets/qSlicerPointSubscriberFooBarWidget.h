@@ -42,6 +42,7 @@ protected slots:
 
 protected:
   QScopedPointer<qSlicerPointSubscriberFooBarWidgetPrivate> d_ptr;
+  void onPublishPointButtonClicked();
 
 private:
   Q_DECLARE_PRIVATE(qSlicerPointSubscriberFooBarWidget);
