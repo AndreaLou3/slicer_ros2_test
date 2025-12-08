@@ -301,7 +301,7 @@ void qSlicerPointSubscriberModuleLogic::PublishTaggedPoint(const std::string& la
   double p[3];
   markupsNode->GetNthControlPointPosition(index, p);
 
-  // ⬇ Send p[0], p[1], p[2] to ROS publisher
+  // Send p to ROS publisher
   vtkNew<vtkDoubleArray> arr;
   arr->SetNumberOfComponents(1);
   arr->SetNumberOfTuples(3);
