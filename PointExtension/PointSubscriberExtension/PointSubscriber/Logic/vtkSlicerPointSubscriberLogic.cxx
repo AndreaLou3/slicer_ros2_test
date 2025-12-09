@@ -37,6 +37,8 @@
 #include <vtkMRMLROS2SubscriberDefaultNodes.h>
 #include <vtkMRMLROS2PublisherDefaultNodes.h>
 
+#include <vtkMRMLROS2GeneratedNodes.h>
+
 // STD includes
 #include <cassert>
 #include <cmath>
@@ -160,7 +162,7 @@ void vtkSlicerPointSubscriberLogic::InitializeSubscriber()
   }
 
   // Create a DoubleArray subscriber for xyz
-  auto sub = rosNode->CreateAndAddSubscriberNode("vtkMRMLROS2PublisherDoubleArrayNode", "/my_point_topic");
+  auto sub = rosNode->CreateAndAddSubscriberNode("DoubleArray", "/my_point_topic");
   if (!sub)
   {
     vtkErrorMacro("Failed to create subscriber!");
@@ -216,7 +218,7 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   }
 
   // Create a DoubleArray publisher for target point coordinates
-  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("vtkMRMLROS2PublisherDoubleArrayNode", "/get_target_point");
+  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
   if (!this->TargetPointPublisher)
   {
     vtkErrorMacro("Failed to create publisher!");
