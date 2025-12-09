@@ -68,7 +68,7 @@ protected:
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 
   vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
-  vtkMRMLROS2PublisherDoubleArrayNode* TargetPointPublisher = nullptr;  // Changed type!
+  vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;  // Changed type!
 
 private:
   vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&) = delete;
@@ -89,11 +89,11 @@ private:
   static void PublishTimerCallback(vtkObject* caller, unsigned long eid, 
                                    void* clientData, void* callData);
 
-  // ROS2 subscriber node
-  vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
+  // // ROS2 subscriber node
+  // vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
 
-  // ROS2 publisher node for target point
-  vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;
+  // // ROS2 publisher node for target point
+  // vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;
 
   // Fiducial node for visualization
   vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr;
