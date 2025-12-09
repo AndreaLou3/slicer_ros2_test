@@ -17,7 +17,8 @@ find_package(rcl_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(service_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)        # <-- added for Image messages
+find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(rcpputils REQUIRED)
 
 # -----------------------------------------------------------------------------
@@ -60,6 +61,7 @@ set(${KIT}_TARGET_LIBRARIES
   service_msgs::service_msgs__rosidl_generator_cpp
   sensor_msgs::sensor_msgs__rosidl_generator_cpp
   rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
+  std_srvs::std_srvs__rosidl_generator_cpp
 )
 
 # -----------------------------------------------------------------------------
