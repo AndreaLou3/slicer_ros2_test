@@ -125,6 +125,15 @@ void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
     {
       vtkWarningMacro("Could not find SlicerROS2 module logic");
     }
+    
+    vtkMRMLScene* scene = this->GetMRMLScene();
+    if (scene)
+    {
+        scene->RegisterNodeClass(
+            vtkSmartPointer<vtkMRMLROS2SubscriberDoubleArrayNode>::New());
+        scene->RegisterNodeClass(
+            vtkSmartPointer<vtkMRMLROS2PublisherDoubleArrayNode>::New());
+    }
 
     this->InitializeSubscriber();
     this->InitializePublisher();
