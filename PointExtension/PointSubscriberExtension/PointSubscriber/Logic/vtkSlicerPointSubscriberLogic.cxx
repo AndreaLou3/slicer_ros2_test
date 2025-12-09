@@ -265,8 +265,8 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetTuple(0, point);
 
   // Cast to the specific DoubleArray publisher type which has the Publish method
-  vtkMRMLROS2PublisherDoubleArrayNode* doubleArrayPub = 
-    vtkMRMLROS2PublisherDoubleArrayNode::SafeDownCast(this->TargetPointPublisher);
+  vtkMRMLROS2PublisherNode* doubleArrayPub = 
+    vtkMRMLROS2PublisherNode::SafeDownCast(this->TargetPointPublisher);
   
   if (doubleArrayPub)
   {
@@ -276,7 +276,6 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   {
     vtkErrorMacro("Failed to cast publisher to DoubleArray type!");
   }
-}
 }
 
 //---------------------------------------------------------------------------
