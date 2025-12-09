@@ -21,6 +21,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(rcpputils REQUIRED)
 find_package(rosbag2_interfaces REQUIRED)
+find_package(moveit_msgs REQUIRED)
 
 # -----------------------------------------------------------------------------
 # Include dirs for Slicer + your generated ROS2 MRML/Logic headers
@@ -64,6 +65,7 @@ set(${KIT}_TARGET_LIBRARIES
   rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
   std_srvs::std_srvs__rosidl_generator_cpp
   rosbag2_interfaces::rosbag2_interfaces__rosidl_generator_cpp
+  moveit_msgs::moveit_msgs__rosidl_generator_cpp
 )
 
 # -----------------------------------------------------------------------------
