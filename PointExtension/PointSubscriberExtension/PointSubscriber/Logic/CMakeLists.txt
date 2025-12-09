@@ -6,9 +6,9 @@ set(${KIT}_EXPORT_DIRECTIVE
     "VTK_SLICER_${MODULE_NAME_UPPER}_MODULE_LOGIC_EXPORT")
 
 # -----------------------------------------------------------------------------
-# Paths to your generated ROS2 MRML/Logic node code
-set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
-set(ROS2_MODULE_BUILD_DIR  "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
+# Dynamically locate the Slicer ROS 2 Module artifacts using CMake's find_package
+# This replaces the hard-coded ROS2_MODULE_SOURCE_DIR/BUILD_DIR variables.
+find_package(SlicerROS2Module REQUIRED)
 
 # -----------------------------------------------------------------------------
 # ROS 2 dependencies (C++ versions)
@@ -28,12 +28,10 @@ find_package(tf2_ros REQUIRED)
 
 # -----------------------------------------------------------------------------
 # Include dirs for Slicer + your generated ROS2 MRML/Logic headers
+# SlicerROS2Module_INCLUDE_DIRS contains all necessary generated header paths.
 include_directories(${tf2_ros_INCLUDE_DIRS})
 set(${KIT}_INCLUDE_DIRECTORIES
-  ${ROS2_MODULE_SOURCE_DIR}/MRML
-  ${ROS2_MODULE_SOURCE_DIR}/Logic
-  ${ROS2_MODULE_BUILD_DIR}/MRML
-  ${ROS2_MODULE_BUILD_DIR}/Logic
+  ${SlicerROS2Module_INCLUDE_DIRS}
   ${tf2_ros_INCLUDE_DIRS}
 )
 
@@ -51,9 +49,8 @@ set(${KIT}_SRCS
 # -----------------------------------------------------------------------------
 # Libraries required by this logic module
 set(${KIT}_TARGET_LIBRARIES
-  # Your generated ROS2 modules
-  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleMRML.so
-  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleLogic.so
+  vtkSlicerROS2ModuleMRML
+  vtkSlicerROS2ModuleLogic
 
   # Slicer components
   vtkSlicerMarkupsModuleMRML
@@ -72,6 +69,7 @@ set(${KIT}_TARGET_LIBRARIES
   rosbag2_interfaces::rosbag2_interfaces__rosidl_generator_cpp
   moveit_msgs::moveit_msgs__rosidl_generator_cpp
   turtlesim::turtlesim__rosidl_generator_cpp
+  tf2_ros::tf2_ros
 )
 
 # -----------------------------------------------------------------------------

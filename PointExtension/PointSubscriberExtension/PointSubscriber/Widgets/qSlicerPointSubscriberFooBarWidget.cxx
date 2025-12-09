@@ -22,6 +22,10 @@
 #include "qSlicerPointSubscriberFooBarWidget.h"
 #include "ui_qSlicerPointSubscriberFooBarWidget.h"
 
+#include <QVBoxLayout>
+#include <QPushButton> 
+#include <QDebug>
+
 //-----------------------------------------------------------------------------
 class qSlicerPointSubscriberFooBarWidgetPrivate
   : public Ui_qSlicerPointSubscriberFooBarWidget
@@ -42,13 +46,30 @@ qSlicerPointSubscriberFooBarWidgetPrivate
   qSlicerPointSubscriberFooBarWidget& object)
   : q_ptr(&object)
 {
+  this->PublishButton = 0;
 }
 
 // --------------------------------------------------------------------------
 void qSlicerPointSubscriberFooBarWidgetPrivate
 ::setupUi(qSlicerPointSubscriberFooBarWidget* widget)
 {
-  this->Ui_qSlicerPointSubscriberFooBarWidget::setupUi(widget);
+  // 1. Manually create the button
+  this->PublishButton = new QPushButton(widget);
+  this->PublishButton->setText(tr("Publish Target Point"));
+  this->PublishButton->setToolTip(tr("Sends the coordinates of the 'ROS2_Target' markup point via ROS 2."));
+  
+  // 2. Set up the layout
+  QVBoxLayout* layout = new QVBoxLayout(widget);
+  layout->addWidget(this->PublishButton);
+  layout->addStretch(1);
+
+  // 3. Connect the signal to the slot
+  QObject::connect(this->PublishButton, SIGNAL(clicked()),
+                   widget, SLOT(onPublishButtonClicked()));
+
+  // NOTE: If you are building manually, you should NOT call the UI setup function.
+  // The line below should be removed or commented out:
+  // this->Ui_qSlicerPointSubscriberFooBarWidget::setupUi(widget);
 }
 
 //-----------------------------------------------------------------------------
@@ -68,4 +89,24 @@ qSlicerPointSubscriberFooBarWidget
 qSlicerPointSubscriberFooBarWidget
 ::~qSlicerPointSubscriberFooBarWidget()
 {
+}
+
+//-----------------------------------------------------------------------------
+void qSlicerPointSubscriberFooBarWidget::setLogic(vtkSlicerPointSubscriberLogic* logic)
+{
+  this->Logic = logic;
+}
+
+// **CHANGE 3B: Implement onPublishButtonClicked slot**
+void qSlicerPointSubscriberFooBarWidget::onPublishButtonClicked()
+{
+  if (!this->Logic)
+  {
+    qWarning() << Q_FUNC_INFO << ": Logic not set!";
+    return;
+  }
+  
+  // Call the public method in the Logic class
+  this->Logic->PublishTargetPoint();
+  qDebug() << Q_FUNC_INFO << ": Target point published.";
 }
