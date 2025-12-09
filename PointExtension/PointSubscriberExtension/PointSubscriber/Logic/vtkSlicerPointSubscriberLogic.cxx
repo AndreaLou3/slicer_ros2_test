@@ -145,6 +145,26 @@ void vtkSlicerPointSubscriberLogic::InitializeSubscriber()
 }
 
 //---------------------------------------------------------------------------
+// Minimal helper wrapper to expose Publish
+class PointPublisherWrapper : public vtkMRMLROS2PublisherNode
+{
+public:
+  size_t PublishDoubleArray(vtkDoubleArray* arr)
+  {
+    auto internalsVTK = dynamic_cast<
+        vtkMRMLROS2PublisherVTKInternals<vtkDoubleArray, std_msgs::msg::Float64MultiArray>*>(
+            this->mInternals);  // protected access allowed in subclass
+    if (!internalsVTK)
+    {
+      vtkErrorMacro("Failed to cast publisher internals to VTK internals!");
+      return 0;
+    }
+    return internalsVTK->Publish(arr);
+  }
+};
+
+
+//---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::InitializePublisher()
 {
   vtkMRMLScene* scene = this->GetMRMLScene();
@@ -233,7 +253,8 @@ void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
   }
 }
 
-//--------------------------------------------------------------------------- 
+
+//---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
 {
   if (!this->TargetPointPublisher)
@@ -247,9 +268,8 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
 
   if (!found)
   {
-    // Publish NaN values if target not found
     point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
-    vtkDebugMacro("Target point 'ROS2_Target' not found, publishing NaN");
+    vtkDebugMacro("Target point not found, publishing NaN");
   }
   else
   {
@@ -257,33 +277,19 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
                   << point[1] << ", " << point[2] << "]");
   }
 
-  // Create a DoubleArray
   vtkNew<vtkDoubleArray> arr;
   arr->SetNumberOfComponents(3);
   arr->SetNumberOfTuples(1);
   arr->SetTuple(0, point);
 
-  // Safe cast to publisher node
-  vtkMRMLROS2PublisherNode* publisher =
-      vtkMRMLROS2PublisherNode::SafeDownCast(this->TargetPointPublisher);
-  if (!publisher)
+  auto wrapper = dynamic_cast<PointPublisherWrapper*>(this->TargetPointPublisher);
+  if (!wrapper)
   {
-    vtkErrorMacro("Failed to cast publisher node!");
+    vtkErrorMacro("Failed to cast TargetPointPublisher to wrapper type!");
     return;
   }
 
-  // Cast internals to the VTK type internals
-  auto internals = dynamic_cast<
-      vtkMRMLROS2PublisherVTKInternals<vtkDoubleArray, std_msgs::msg::Float64MultiArray>*>(
-          publisher->mInternals.get());
-  if (!internals)
-  {
-    vtkErrorMacro("Failed to cast publisher internals to VTK internals!");
-    return;
-  }
-
-  // Publish via internals
-  internals->Publish(arr.GetPointer());
+  wrapper->PublishDoubleArray(arr.GetPointer());
 }
 
 //---------------------------------------------------------------------------
