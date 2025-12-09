@@ -53,7 +53,7 @@ public:
   void InitializePublisher();
 
   // Start/Stop publishing target point periodically
-  void StartPublishing(double intervalMs = 100.0);  // Default 100ms = 10Hz
+  void StartPublishing(double intervalMs = 100.0);
   void StopPublishing();
 
   // Manually publish the current target point (can be called anytime)
@@ -97,7 +97,7 @@ private:
   // Timer for periodic publishing
   vtkSmartPointer<vtkCallbackCommand> PublishTimer;
   unsigned long PublishTimerId = 0;
-  double PublishInterval = 100.0;  // milliseconds
+  double PublishInterval = 100.0;
   double LastPublishTime = 0.0;
   
   // Track if we've already initialized

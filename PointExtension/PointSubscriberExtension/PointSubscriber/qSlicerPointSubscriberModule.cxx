@@ -96,31 +96,7 @@ void qSlicerPointSubscriberModule::setup()
   this->Superclass::setup();
   
   std::cout << "=== PointSubscriber Module Setup Called ===" << std::endl;
-  
-  // // Get the logic
-  // vtkSlicerPointSubscriberLogic* logic = 
-  //   vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
-  
-  // if (!logic)
-  // {
-  //   std::cerr << "ERROR: Failed to get logic!" << std::endl;
-  //   return;
-  // }
-  
-  // // Initialize the subscriber (for incoming points)
-  // std::cout << "Logic obtained, calling InitializeSubscriber..." << std::endl;
-  // logic->InitializeSubscriber();
-  // std::cout << "InitializeSubscriber called" << std::endl;
-  
-  // // Initialize the publisher (for target point)
-  // std::cout << "Calling InitializePublisher..." << std::endl;
-  // logic->InitializePublisher();
-  // std::cout << "InitializePublisher called" << std::endl;
-  
-  // // Start publishing target point at 10Hz (100ms interval)
-  // std::cout << "Starting target point publishing at 10Hz..." << std::endl;
-  // logic->StartPublishing(100.0);
-  // std::cout << "Target point publishing started" << std::endl;
+
 }
 
 //-----------------------------------------------------------------------------
