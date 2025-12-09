@@ -31,6 +31,7 @@
 #include <vtkMRMLROS2NodeNode.h>
 #include <vtkMRMLROS2SubscriberNode.h>
 #include <vtkMRMLROS2PublisherNode.h>
+#include <vtkMRMLROS2GeneratedNodes.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
 
 
@@ -162,14 +163,12 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   }
 
   // Create a DoubleArray publisher for target point coordinates
-  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
-  if (!pub)
+  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  if (!this->TargetPointPublisher)
   {
     vtkErrorMacro("Failed to create publisher!");
     return;
   }
-
-  this->TargetPointPublisher = pub;
 
   vtkInfoMacro("Target point publisher initialized on topic /get_target_point");
 }
@@ -259,13 +258,25 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
                   << point[1] << ", " << point[2] << "]");
   }
 
-  // Create a DoubleArray and publish
+  // Create a DoubleArray
   vtkNew<vtkDoubleArray> arr;
   arr->SetNumberOfComponents(3);
   arr->SetNumberOfTuples(1);
   arr->SetTuple(0, point);
 
-  this->TargetPointPublisher->Publish(arr.GetPointer());
+  // Cast to the specific DoubleArray publisher type which has the Publish method
+  vtkMRMLROS2PublisherDoubleArrayNode* doubleArrayPub = 
+    vtkMRMLROS2PublisherDoubleArrayNode::SafeDownCast(this->TargetPointPublisher);
+  
+  if (doubleArrayPub)
+  {
+    doubleArrayPub->Publish(arr.GetPointer());
+  }
+  else
+  {
+    vtkErrorMacro("Failed to cast publisher to DoubleArray type!");
+  }
+}
 }
 
 //---------------------------------------------------------------------------
