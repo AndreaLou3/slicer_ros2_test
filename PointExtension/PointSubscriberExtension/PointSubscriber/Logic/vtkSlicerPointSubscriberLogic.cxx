@@ -105,44 +105,34 @@ void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene
 //---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
 {
-  if (this->Initialized)
-    return;
+    if (this->Initialized)
+        return;
 
-  auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(node);
-  if (rosNode)
-  {
-    vtkInfoMacro("ROS2 node detected, initializing subscriber and publisher...");
+    auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(node);
+    if (!rosNode)
+        return;
 
-    // // Register all default ROS2 nodes in the scene
-    // vtkSlicerROS2Logic* rosLogic =
-    //     vtkSlicerROS2Logic::SafeDownCast(
-    //         qSlicerCoreApplication::application()->moduleLogic("ROS2"));
-    // if (rosLogic)
-    // {
-    //   rosLogic->RegisterNodes();
-    // }
-    // else
-    // {
-    //   vtkWarningMacro("Could not find SlicerROS2 module logic");
-    // }
+    // Get ROS2 module logic
+    vtkSlicerROS2Logic* rosLogic =
+        vtkSlicerROS2Logic::SafeDownCast(
+            qSlicerCoreApplication::application()->moduleLogic("ROS2"));
 
-    vtkMRMLScene* scene = this->GetMRMLScene();
-    if (scene)
+    if (!rosLogic)
     {
-        scene->RegisterNodeClass(
-            vtkSmartPointer<vtkMRMLROS2SubscriberDoubleArrayNode>::New());
-        scene->RegisterNodeClass(
-            vtkSmartPointer<vtkMRMLROS2PublisherDoubleArrayNode>::New());
+        vtkWarningMacro("ROS2 module logic not available yet, try again later");
+        return;
     }
 
+    // **Do NOT call RegisterNodes() manually** — ROS2 logic already registers default nodes
+
+    // Now it’s safe to create your subscriber/publisher
     this->InitializeSubscriber();
     this->InitializePublisher();
     this->StartPublishing(100.0);
     this->Initialized = true;
-    vtkInfoMacro("ROS2 initialization complete");
-  }
-}
 
+    vtkInfoMacro("ROS2 initialization complete");
+}
 
 //-----------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::RegisterNodes()
