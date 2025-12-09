@@ -15,12 +15,6 @@
 
 ==============================================================================*/
 
-// .NAME vtkSlicerPointSubscriberLogic - slicer logic class for volumes manipulation
-// .SECTION Description
-// This class manages the logic associated with reading, saving,
-// and changing propertied of the volumes
-
-
 #ifndef __vtkSlicerPointSubscriberLogic_h
 #define __vtkSlicerPointSubscriberLogic_h
 
@@ -28,50 +22,87 @@
 #include "vtkSlicerModuleLogic.h"
 
 // MRML includes
+#include <vtkMRMLROS2SubscriberNode.h>
+#include <vtkMRMLROS2PublisherNode.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
-#include <vtkMRMLROS2SubscriberNode.h> 
+
+// VTK includes
+#include <vtkCallbackCommand.h>
+#include <vtkSmartPointer.h>
+#include <vtkTimerLog.h>
 
 // STD includes
 #include <cstdlib>
 
 #include "vtkSlicerPointSubscriberModuleLogicExport.h"
 
-
 class VTK_SLICER_POINTSUBSCRIBER_MODULE_LOGIC_EXPORT vtkSlicerPointSubscriberLogic :
   public vtkSlicerModuleLogic
 {
 public:
-
   static vtkSlicerPointSubscriberLogic *New();
   vtkTypeMacro(vtkSlicerPointSubscriberLogic, vtkSlicerModuleLogic);
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
+  // Initialize the ROS2 subscriber
   void InitializeSubscriber();
-  // void OnPointMessageReceived(const geometry_msgs__msg__PointStamped* msg);
+
+  // Initialize the ROS2 publisher for target point
+  void InitializePublisher();
+
+  // Start/Stop publishing target point periodically
+  void StartPublishing(double intervalMs = 100.0);  // Default 100ms = 10Hz
+  void StopPublishing();
+
+  // Manually publish the current target point (can be called anytime)
+  void PublishTargetPoint();
 
 protected:
   vtkSlicerPointSubscriberLogic();
   ~vtkSlicerPointSubscriberLogic() override;
 
   void SetMRMLSceneInternal(vtkMRMLScene* newScene) override;
-  /// Register MRML Node classes to Scene. Gets called automatically when the MRMLScene is attached to this logic class.
   void RegisterNodes() override;
   void UpdateFromMRMLScene() override;
   void OnMRMLSceneNodeAdded(vtkMRMLNode* node) override;
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 
-  // Added
-  void ProcessMRMLCallbacks(vtkObject* caller, unsigned long event, void* callData);
+private:
+  vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&) = delete;
+  void operator=(const vtkSlicerPointSubscriberLogic&) = delete;
+
+  // Callback for subscriber (incoming points)
+  void ProcessMRMLCallbacks(vtkObject* caller, unsigned long eid, void* callData);
+
+  // Update the fiducial marker with received point
   void UpdateFiducial(double xyz[3]);
 
-private:
+  // Get the coordinates of the "ROS2_Target" fiducial
+  // Returns true if found, false otherwise
+  // If not found, point array is not modified
+  bool GetTargetPointCoordinates(double point[3]);
 
-  vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&); // Not implemented
-  void operator=(const vtkSlicerPointSubscriberLogic&); // Not implemented
+  // Timer callback for periodic publishing
+  static void PublishTimerCallback(vtkObject* caller, unsigned long eid, 
+                                   void* clientData, void* callData);
 
-  // Added
+  // ROS2 subscriber node
   vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
-  vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr; 
+
+  // ROS2 publisher node for target point
+  vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;
+
+  // Fiducial node for visualization
+  vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr;
+
+  // Timer for periodic publishing
+  vtkSmartPointer<vtkCallbackCommand> PublishTimer;
+  unsigned long PublishTimerId = 0;
+  double PublishInterval = 100.0;  // milliseconds
+  double LastPublishTime = 0.0;
+  
+  // Track if we've already initialized
+  bool Initialized = false;
 };
 
 #endif

@@ -55,7 +55,7 @@ qSlicerPointSubscriberModule::~qSlicerPointSubscriberModule()
 //-----------------------------------------------------------------------------
 QString qSlicerPointSubscriberModule::helpText() const
 {
-  return "This is a loadable module that can be bundled in an extension";
+  return "This module subscribes to ROS2 point data and publishes target point coordinates";
 }
 
 //-----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ void qSlicerPointSubscriberModule::setup()
   
   std::cout << "=== PointSubscriber Module Setup Called ===" << std::endl;
   
-  // Initialize the subscriber when module loads
+  // Get the logic
   vtkSlicerPointSubscriberLogic* logic = 
     vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
   
@@ -107,9 +107,20 @@ void qSlicerPointSubscriberModule::setup()
     return;
   }
   
+  // Initialize the subscriber (for incoming points)
   std::cout << "Logic obtained, calling InitializeSubscriber..." << std::endl;
   logic->InitializeSubscriber();
   std::cout << "InitializeSubscriber called" << std::endl;
+  
+  // Initialize the publisher (for target point)
+  std::cout << "Calling InitializePublisher..." << std::endl;
+  logic->InitializePublisher();
+  std::cout << "InitializePublisher called" << std::endl;
+  
+  // Start publishing target point at 10Hz (100ms interval)
+  std::cout << "Starting target point publishing at 10Hz..." << std::endl;
+  logic->StartPublishing(100.0);
+  std::cout << "Target point publishing started" << std::endl;
 }
 
 //-----------------------------------------------------------------------------

@@ -25,15 +25,18 @@
 #include <vtkIntArray.h>
 #include <vtkNew.h>
 #include <vtkObjectFactory.h>
+#include <vtkCallbackCommand.h>
 
 #include <vtkMRMLScene.h>
 #include <vtkMRMLROS2NodeNode.h>
 #include <vtkMRMLROS2SubscriberNode.h>
+#include <vtkMRMLROS2PublisherNode.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
 
 
 // STD includes
 #include <cassert>
+#include <cmath>
 
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
@@ -41,11 +44,15 @@ vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
 {
+  this->PublishTimer = vtkSmartPointer<vtkCallbackCommand>::New();
+  this->PublishTimer->SetCallback(PublishTimerCallback);
+  this->PublishTimer->SetClientData(this);
 }
 
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::~vtkSlicerPointSubscriberLogic()
 {
+  this->StopPublishing();
 }
 
 //----------------------------------------------------------------------------
@@ -62,6 +69,17 @@ void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene
   events->InsertNextValue(vtkMRMLScene::NodeRemovedEvent);
   events->InsertNextValue(vtkMRMLScene::EndBatchProcessEvent);
   this->SetAndObserveMRMLSceneEventsInternal(newScene, events.GetPointer());
+  
+  // Initialize ROS2 subscriber and publisher when scene is set
+  if (newScene && !this->Initialized)
+  {
+    vtkInfoMacro("Scene is now available, initializing ROS2 nodes...");
+    this->InitializeSubscriber();
+    this->InitializePublisher();
+    this->StartPublishing(100.0);
+    this->Initialized = true;
+    vtkInfoMacro("ROS2 initialization complete");
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -122,6 +140,173 @@ void vtkSlicerPointSubscriberLogic::InitializeSubscriber()
   this->PointSubscriberNode = sub;
 
   vtkInfoMacro("Point subscriber initialized.");
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::InitializePublisher()
+{
+  vtkMRMLScene* scene = this->GetMRMLScene();
+  if (!scene)
+  {
+    vtkErrorMacro("Cannot initialize publisher: no scene found.");
+    return;
+  }
+
+  // Find the active ROS2 node in the scene
+  auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(
+      scene->GetFirstNodeByClass("vtkMRMLROS2NodeNode"));
+  if (!rosNode)
+  {
+    vtkErrorMacro("No ROS2 node exists! Start the Slicer ROS2 module first.");
+    return;
+  }
+
+  // Create a DoubleArray publisher for target point coordinates
+  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  if (!pub)
+  {
+    vtkErrorMacro("Failed to create publisher!");
+    return;
+  }
+
+  this->TargetPointPublisher = pub;
+
+  vtkInfoMacro("Target point publisher initialized on topic /get_target_point");
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::StartPublishing(double intervalMs)
+{
+  if (this->PublishTimerId != 0)
+  {
+    vtkWarningMacro("Publisher timer already running!");
+    return;
+  }
+
+  if (!this->TargetPointPublisher)
+  {
+    vtkErrorMacro("Publisher not initialized! Call InitializePublisher() first.");
+    return;
+  }
+
+  // Create a timer to periodically publish the target point
+  this->PublishTimerId = this->GetMRMLScene()->AddObserver(
+    vtkMRMLScene::EndBatchProcessEvent, this->PublishTimer);
+  
+  this->PublishInterval = intervalMs;
+  this->LastPublishTime = vtkTimerLog::GetUniversalTime();
+
+  vtkInfoMacro("Started publishing target point every " << intervalMs << " ms");
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::StopPublishing()
+{
+  if (this->PublishTimerId != 0 && this->GetMRMLScene())
+  {
+    this->GetMRMLScene()->RemoveObserver(this->PublishTimerId);
+    this->PublishTimerId = 0;
+    vtkInfoMacro("Stopped publishing target point");
+  }
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
+    vtkObject* caller, unsigned long, void* clientData, void*)
+{
+  vtkSlicerPointSubscriberLogic* self = 
+    reinterpret_cast<vtkSlicerPointSubscriberLogic*>(clientData);
+  
+  if (!self)
+  {
+    return;
+  }
+
+  // Check if enough time has elapsed
+  double currentTime = vtkTimerLog::GetUniversalTime();
+  double elapsedMs = (currentTime - self->LastPublishTime) * 1000.0;
+  
+  if (elapsedMs >= self->PublishInterval)
+  {
+    self->PublishTargetPoint();
+    self->LastPublishTime = currentTime;
+  }
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
+{
+  if (!this->TargetPointPublisher)
+  {
+    vtkErrorMacro("Publisher not initialized!");
+    return;
+  }
+
+  double point[3];
+  bool found = this->GetTargetPointCoordinates(point);
+
+  if (!found)
+  {
+    // Publish NaN values if target not found
+    point[0] = std::numeric_limits<double>::quiet_NaN();
+    point[1] = std::numeric_limits<double>::quiet_NaN();
+    point[2] = std::numeric_limits<double>::quiet_NaN();
+    vtkDebugMacro("Target point 'ROS2_Target' not found, publishing NaN");
+  }
+  else
+  {
+    vtkDebugMacro("Publishing target point: [" << point[0] << ", " 
+                  << point[1] << ", " << point[2] << "]");
+  }
+
+  // Create a DoubleArray and publish
+  vtkNew<vtkDoubleArray> arr;
+  arr->SetNumberOfComponents(3);
+  arr->SetNumberOfTuples(1);
+  arr->SetTuple(0, point);
+
+  this->TargetPointPublisher->Publish(arr.GetPointer());
+}
+
+//---------------------------------------------------------------------------
+bool vtkSlicerPointSubscriberLogic::GetTargetPointCoordinates(double point[3])
+{
+  vtkMRMLScene* scene = this->GetMRMLScene();
+  if (!scene)
+  {
+    vtkErrorMacro("No scene available!");
+    return false;
+  }
+
+  // Search for a markup node named "ROS2_Target"
+  vtkMRMLNode* node = scene->GetFirstNodeByName("ROS2_Target");
+  if (!node)
+  {
+    vtkDebugMacro("No node named 'ROS2_Target' found in scene");
+    return false;
+  }
+
+  // Try to cast to a fiducial node
+  vtkMRMLMarkupsFiducialNode* fiducialNode = 
+    vtkMRMLMarkupsFiducialNode::SafeDownCast(node);
+  
+  if (!fiducialNode)
+  {
+    vtkWarningMacro("Node 'ROS2_Target' exists but is not a fiducial node");
+    return false;
+  }
+
+  // Check if it has any control points
+  if (fiducialNode->GetNumberOfControlPoints() == 0)
+  {
+    vtkDebugMacro("Fiducial 'ROS2_Target' has no control points");
+    return false;
+  }
+
+  // Get the first control point position
+  fiducialNode->GetNthControlPointPosition(0, point);
+  
+  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -214,4 +399,3 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
     vtkInfoMacro("Control point updated to: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]");
   }
 }
-
