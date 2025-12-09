@@ -374,23 +374,17 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
                << " tuples and " << arr->GetNumberOfComponents() 
                << " components");
 
-  // Verify expected shape: 1 tuple, 3 components
-  if (arr->GetNumberOfTuples() != 1 || arr->GetNumberOfComponents() != 3)
+  // Treat data as one tuple of 3 components
+  if (arr->GetNumberOfValues() < 3)
   {
-    vtkErrorMacro("Expected 1 tuple with 3 components, got "
-                  << arr->GetNumberOfTuples() << " tuples and "
-                  << arr->GetNumberOfComponents() << " components");
+    vtkErrorMacro("Array doesn't have at least 3 values!");
     return;
   }
 
-  // Extract point
   double point[3];
-  arr->GetTuple(0, point);
+  for (int i = 0; i < 3; ++i)
+    point[i] = arr->GetValue(i);
 
-  vtkInfoMacro("Received point: [" << point[0] << ", " 
-               << point[1] << ", " << point[2] << "]");
-
-  // Update fiducial in scene
   this->UpdateFiducial(point);
 }
 
