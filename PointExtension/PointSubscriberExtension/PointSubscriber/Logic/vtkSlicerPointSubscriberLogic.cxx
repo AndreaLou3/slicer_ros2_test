@@ -128,10 +128,10 @@ void vtkSlicerPointSubscriberLogic::UpdateFromMRMLScene()
 }
 
 //---------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic
-::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
-{
-}
+// void vtkSlicerPointSubscriberLogic
+// ::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
+// {
+// }
 
 //---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic
