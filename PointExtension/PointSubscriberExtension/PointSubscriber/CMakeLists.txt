@@ -12,11 +12,6 @@ add_subdirectory(Widgets)
 set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
 set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
-# Find ROS2 packages (optional at this level, but good practice)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
 
@@ -30,9 +25,6 @@ set(MODULE_INCLUDE_DIRECTORIES
   ${ROS2_MODULE_SOURCE_DIR}/Logic
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
-  ${rclcpp_INCLUDE_DIRS}
-  ${std_msgs_INCLUDE_DIRS}
-  ${geometry_msgs_INCLUDE_DIRS}
   )
 
 set(MODULE_SRCS

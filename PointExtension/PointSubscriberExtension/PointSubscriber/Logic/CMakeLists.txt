@@ -9,6 +9,19 @@ set(${KIT}_EXPORT_DIRECTIVE "VTK_SLICER_${MODULE_NAME_UPPER}_MODULE_LOGIC_EXPORT
 set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
 set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
+# Get ROS2 include directories from environment
+# These should be set when ROS2 is sourced
+set(ROS2_INCLUDE_DIRS
+  "$ENV{AMENT_PREFIX_PATH}/include/rclcpp"
+  "$ENV{AMENT_PREFIX_PATH}/include/rcl"
+  "$ENV{AMENT_PREFIX_PATH}/include/std_msgs"
+  "$ENV{AMENT_PREFIX_PATH}/include/geometry_msgs"
+  )
+
+# If AMENT_PREFIX_PATH has multiple paths (separated by :), take the first one
+string(REPLACE ":" ";" AMENT_PATHS "$ENV{AMENT_PREFIX_PATH}")
+list(GET AMENT_PATHS 0 AMENT_FIRST_PATH)
+
 set(${KIT}_INCLUDE_DIRECTORIES
   # Source directories (where the .h files are)
   ${ROS2_MODULE_SOURCE_DIR}/MRML
@@ -17,10 +30,20 @@ set(${KIT}_INCLUDE_DIRECTORIES
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
   # ROS2 include directories
-  ${rclcpp_INCLUDE_DIRS}
-  ${std_msgs_INCLUDE_DIRS}
-  ${geometry_msgs_INCLUDE_DIRS}
-)
+  ${AMENT_FIRST_PATH}/include/rclcpp
+  ${AMENT_FIRST_PATH}/include/rcl
+  ${AMENT_FIRST_PATH}/include/rcl_interfaces
+  ${AMENT_FIRST_PATH}/include/rcl_yaml_param_parser
+  ${AMENT_FIRST_PATH}/include/rcutils
+  ${AMENT_FIRST_PATH}/include/rmw
+  ${AMENT_FIRST_PATH}/include/rosidl_runtime_c
+  ${AMENT_FIRST_PATH}/include/rosidl_runtime_cpp
+  ${AMENT_FIRST_PATH}/include/rosidl_typesupport_interface
+  ${AMENT_FIRST_PATH}/include/rosidl_typesupport_cpp
+  ${AMENT_FIRST_PATH}/include/std_msgs
+  ${AMENT_FIRST_PATH}/include/geometry_msgs
+  ${AMENT_FIRST_PATH}/include/builtin_interfaces
+  )
 
 #-----------------------------------------------------------------------------
 set(${KIT}_SRCS
