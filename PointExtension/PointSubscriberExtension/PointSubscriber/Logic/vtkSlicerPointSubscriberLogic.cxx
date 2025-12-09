@@ -34,9 +34,8 @@
 #include <vtkMRMLROS2GeneratedNodes.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
 #include "vtkMRMLROS2PublisherInternals.h"
-#include <vtkMRMLROS2SubscriberDoubleArrayNode.h>
-#include <vtkMRMLROS2PublisherDoubleArrayNode.h>
-
+#include <vtkMRMLROS2SubscriberDefaultNodes.h>
+#include <vtkMRMLROS2PublisherDefaultNodes.h>
 
 // STD includes
 #include <cassert>
