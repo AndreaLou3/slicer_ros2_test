@@ -25,6 +25,8 @@
 #include <vtkMRMLROS2SubscriberNode.h>
 #include <vtkMRMLROS2PublisherNode.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
+#include <vtkMRMLROS2SubscriberDefaultNodes.h>
+#include <vtkMRMLROS2PublisherDefaultNodes.h>
 
 // VTK includes
 #include <vtkCallbackCommand.h>
@@ -68,7 +70,7 @@ protected:
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 
   vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
-  vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;  // Changed type!
+  vtkMRMLROS2PublisherDoubleArrayNode* TargetPointPublisher = nullptr;  // Use derived type!
 
 private:
   vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&) = delete;

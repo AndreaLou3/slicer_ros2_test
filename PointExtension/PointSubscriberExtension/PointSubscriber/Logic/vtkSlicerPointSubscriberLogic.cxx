@@ -231,12 +231,15 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
     return;
   }
 
-  // Create publisher - store as base type
-  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  // CreateAndAddPublisherNode returns base class pointer
+  auto basePublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  
+  // Cast to derived type to access Publish method
+  this->TargetPointPublisher = dynamic_cast<vtkMRMLROS2PublisherDoubleArrayNode*>(basePublisher);
 
   if (!this->TargetPointPublisher)
   {
-    vtkErrorMacro("Failed to create publisher!");
+    vtkErrorMacro("Failed to create DoubleArray publisher!");
     return;
   }
   
@@ -267,9 +270,8 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetValue(1, point[1]);
   arr->SetValue(2, point[2]);
 
-  // Use SetLastMessage to trigger publication
-  vtkVariant variant(arr.GetPointer());
-  this->TargetPointPublisher->SetLastMessage(variant);
+  // Now you can call Publish directly!
+  this->TargetPointPublisher->Publish(arr.GetPointer());
   
   vtkDebugMacro("Published target point: [" << point[0] << ", " 
                 << point[1] << ", " << point[2] << "]");
