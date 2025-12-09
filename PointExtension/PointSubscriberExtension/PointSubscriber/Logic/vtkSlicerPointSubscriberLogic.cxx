@@ -33,6 +33,7 @@
 #include <vtkMRMLROS2PublisherNode.h>
 #include <vtkMRMLROS2GeneratedNodes.h>
 #include <vtkMRMLMarkupsFiducialNode.h>
+#include "vtkMRMLROS2PublisherInternals.h"
 
 
 // STD includes
@@ -232,7 +233,7 @@ void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
   }
 }
 
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------------------- 
 void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
 {
   if (!this->TargetPointPublisher)
@@ -247,9 +248,7 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   if (!found)
   {
     // Publish NaN values if target not found
-    point[0] = std::numeric_limits<double>::quiet_NaN();
-    point[1] = std::numeric_limits<double>::quiet_NaN();
-    point[2] = std::numeric_limits<double>::quiet_NaN();
+    point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
     vtkDebugMacro("Target point 'ROS2_Target' not found, publishing NaN");
   }
   else
@@ -264,18 +263,27 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetNumberOfTuples(1);
   arr->SetTuple(0, point);
 
-  // Cast to the specific DoubleArray publisher type which has the Publish method
-  vtkMRMLROS2PublisherNode* doubleArrayPub = 
-    vtkMRMLROS2PublisherNode::SafeDownCast(this->TargetPointPublisher);
-  
-  if (doubleArrayPub)
+  // Safe cast to publisher node
+  vtkMRMLROS2PublisherNode* publisher =
+      vtkMRMLROS2PublisherNode::SafeDownCast(this->TargetPointPublisher);
+  if (!publisher)
   {
-    doubleArrayPub->Publish(arr.GetPointer());
+    vtkErrorMacro("Failed to cast publisher node!");
+    return;
   }
-  else
+
+  // Cast internals to the VTK type internals
+  auto internals = dynamic_cast<
+      vtkMRMLROS2PublisherVTKInternals<vtkDoubleArray, std_msgs::msg::Float64MultiArray>*>(
+          publisher->mInternals.get());
+  if (!internals)
   {
-    vtkErrorMacro("Failed to cast publisher to DoubleArray type!");
+    vtkErrorMacro("Failed to cast publisher internals to VTK internals!");
+    return;
   }
+
+  // Publish via internals
+  internals->Publish(arr.GetPointer());
 }
 
 //---------------------------------------------------------------------------
