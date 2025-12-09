@@ -260,8 +260,8 @@ void vtkSlicerPointSubscriberLogic::StartPublishing(double intervalMs)
   }
 
   // Create a timer to periodically publish the target point
-  this->PublishTimerId = this->GetMRMLScene()->AddObserver(
-    vtkMRMLScene::EndBatchProcessEvent, this->PublishTimer);
+  // this->PublishTimerId = this->GetMRMLScene()->AddObserver(
+  //   vtkMRMLScene::EndBatchProcessEvent, this->PublishTimer);
   
   this->PublishInterval = intervalMs;
   this->LastPublishTime = vtkTimerLog::GetUniversalTime();

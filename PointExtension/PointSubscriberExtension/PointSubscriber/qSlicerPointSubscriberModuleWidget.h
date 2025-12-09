@@ -23,6 +23,8 @@
 
 #include "qSlicerPointSubscriberModuleExport.h"
 
+#include <QTimer>
+
 class qSlicerPointSubscriberModuleWidgetPrivate;
 class vtkMRMLNode;
 
@@ -48,6 +50,7 @@ protected:
 private:
   Q_DECLARE_PRIVATE(qSlicerPointSubscriberModuleWidget);
   Q_DISABLE_COPY(qSlicerPointSubscriberModuleWidget);
+  QTimer* PublishTimer;
 };
 
 #endif

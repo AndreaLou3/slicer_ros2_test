@@ -58,14 +58,27 @@ qSlicerPointSubscriberModuleWidget::~qSlicerPointSubscriberModuleWidget()
 //-----------------------------------------------------------------------------
 void qSlicerPointSubscriberModuleWidget::setup()
 {
-  Q_D(qSlicerPointSubscriberModuleWidget);
-  d->setupUi(this);
-  this->Superclass::setup();
+  // Q_D(qSlicerPointSubscriberModuleWidget);
+  // d->setupUi(this);
+  // this->Superclass::setup();
 
+  // auto logic = vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
+  // if (logic)
+  // {
+  //   logic->InitializeSubscriber();
+  //   logic->InitializePublisher();
+  // }
   auto logic = vtkSlicerPointSubscriberLogic::SafeDownCast(this->logic());
   if (logic)
   {
-    logic->InitializeSubscriber();
-    logic->InitializePublisher();
+      logic->InitializeSubscriber();
+      logic->InitializePublisher();
+
+      // Setup Qt timer for periodic publishing
+      PublishTimer = new QTimer(this);
+      connect(PublishTimer, &QTimer::timeout, [logic]() {
+          logic->PublishTargetPoint();
+      });
+      PublishTimer->start(100); // 100 ms interval
   }
 }
