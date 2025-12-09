@@ -43,6 +43,9 @@
 #include <cassert>
 #include <cmath>
 
+#include <vtkSlicerROS2Logic.h>
+#include <qSlicerApplication.h>
+
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 
@@ -105,11 +108,24 @@ void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
   if (this->Initialized)
     return;
 
-  // Check if the node is the ROS2 node
   auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(node);
   if (rosNode)
   {
     vtkInfoMacro("ROS2 node detected, initializing subscriber and publisher...");
+
+    // Register all default ROS2 nodes in the scene
+    vtkSlicerROS2Logic* rosLogic =
+        vtkSlicerROS2Logic::SafeDownCast(
+            qSlicerCoreApplication::application()->moduleLogic("ROS2"));
+    if (rosLogic)
+    {
+      rosLogic->RegisterNodes();
+    }
+    else
+    {
+      vtkWarningMacro("Could not find SlicerROS2 module logic");
+    }
+
     this->InitializeSubscriber();
     this->InitializePublisher();
     this->StartPublishing(100.0);
@@ -117,6 +133,7 @@ void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
     vtkInfoMacro("ROS2 initialization complete");
   }
 }
+
 
 //-----------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::RegisterNodes()
