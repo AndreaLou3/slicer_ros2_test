@@ -381,10 +381,14 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
     return;
   }
 
-  double point[3];
-  for (int i = 0; i < 3; ++i)
-    point[i] = arr->GetValue(i);
+  // double point[3];
+  // for (int i = 0; i < 3; ++i)
+  //   point[i] = arr->GetValue(i);
 
+  // this->UpdateFiducial(point);
+
+  double point[3];
+  arr->GetTuple(0, point);
   this->UpdateFiducial(point);
 }
 
