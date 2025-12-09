@@ -234,7 +234,9 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   }
 
   // Create a DoubleArray publisher for target point coordinates
-  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  // this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode<PointPublisherWrapper>(
+      "DoubleArray", "/get_target_point");
   if (!this->TargetPointPublisher)
   {
     vtkErrorMacro("Failed to create publisher!");
@@ -332,17 +334,14 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetNumberOfTuples(1);
   arr->SetTuple(0, point);
 
-  auto internalsVTK = dynamic_cast<
-      vtkMRMLROS2PublisherVTKInternals<vtkDoubleArray, std_msgs::msg::Float64MultiArray>*>(
-          this->TargetPointPublisher->mInternals);
-
-  if (!internalsVTK)
+  auto wrapper = dynamic_cast<PointPublisherWrapper*>(this->TargetPointPublisher);
+  if (!wrapper)
   {
-      vtkErrorMacro("Failed to get VTK internals!");
-      return;
+    vtkErrorMacro("Failed to cast TargetPointPublisher to wrapper type!");
+    return;
   }
 
-  internalsVTK->Publish(arr.GetPointer());
+  wrapper->PublishDoubleArray(arr.GetPointer());
 }
 
 //---------------------------------------------------------------------------
