@@ -16,7 +16,11 @@ set(${KIT}_INCLUDE_DIRECTORIES
   # Build directories (for generated export headers)
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
-  )
+  # ROS2 include directories
+  ${rclcpp_INCLUDE_DIRS}
+  ${std_msgs_INCLUDE_DIRS}
+  ${geometry_msgs_INCLUDE_DIRS}
+)
 
 #-----------------------------------------------------------------------------
 set(${KIT}_SRCS
