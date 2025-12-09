@@ -352,7 +352,7 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
     vtkObject* caller, unsigned long, void*)
 {
   vtkInfoMacro("ProcessMRMLCallbacks called!");
-  
+
   auto* sub = vtkMRMLROS2SubscriberNode::SafeDownCast(caller);
   if (!sub)
   {
@@ -362,33 +362,20 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
 
   vtkInfoMacro("Getting last message variant...");
   vtkVariant variant = sub->GetLastMessageVariant();
-  
+
   vtkDoubleArray* arr = vtkDoubleArray::SafeDownCast(variant.ToVTKObject());
   if (!arr)
   {
-    vtkErrorMacro("Failed to cast to vtkDoubleArray!");
+    vtkErrorMacro("Failed to cast last message to vtkDoubleArray!");
     return;
   }
-  
-  vtkInfoMacro("Array has " << arr->GetNumberOfTuples() << " tuples and " 
-               << arr->GetNumberOfComponents() << " components");
-  
-  // if (arr->GetNumberOfValues() < 3)
-  // {
-  //     vtkErrorMacro("Array doesn't have at least 3 values!");
-  //     return;
-  // }
 
-  // double point[3];
-  // point[0] = arr->GetValue(0);
-  // point[1] = arr->GetValue(1);
-  // point[2] = arr->GetValue(2);
+  vtkInfoMacro("Array has " << arr->GetNumberOfTuples() 
+               << " tuples and " << arr->GetNumberOfComponents() 
+               << " components");
 
-  
-  // vtkInfoMacro("Received point: [" << point[0] << ", " << point[1] << ", " << point[2] << "]");
-  
-  // this->UpdateFiducial(point);
-  if (arr->GetNumberOfComponents() != 1 || arr->GetNumberOfTuples() != 3)
+  // Verify expected shape: 1 tuple, 3 components
+  if (arr->GetNumberOfTuples() != 1 || arr->GetNumberOfComponents() != 3)
   {
     vtkErrorMacro("Expected 1 tuple with 3 components, got "
                   << arr->GetNumberOfTuples() << " tuples and "
@@ -396,11 +383,17 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
     return;
   }
 
-double point[3];
-arr->GetTuple(0, point);
-this->UpdateFiducial(point);
+  // Extract point
+  double point[3];
+  arr->GetTuple(0, point);
 
+  vtkInfoMacro("Received point: [" << point[0] << ", " 
+               << point[1] << ", " << point[2] << "]");
+
+  // Update fiducial in scene
+  this->UpdateFiducial(point);
 }
+
 
 //------------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
