@@ -213,8 +213,6 @@ public:
   }
 };
 
-
-//---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::InitializePublisher()
 {
@@ -229,23 +227,20 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
       scene->GetFirstNodeByClass("vtkMRMLROS2NodeNode"));
   if (!rosNode)
   {
-    vtkErrorMacro("No ROS2 node exists! Start the Slicer ROS2 module first.");
+    vtkErrorMacro("No ROS2 node exists!");
     return;
   }
 
-  // Create a DoubleArray publisher - this returns the correct typed node
-  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
-  
-  // Cast to the specific DoubleArray publisher type
-  this->TargetPointPublisher = vtkMRMLROS2PublisherDoubleArrayNode::SafeDownCast(pub);
+  // Create publisher - store as base type
+  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
 
   if (!this->TargetPointPublisher)
   {
-    vtkErrorMacro("Failed to create DoubleArray publisher!");
+    vtkErrorMacro("Failed to create publisher!");
     return;
   }
   
-  vtkInfoMacro("Target point publisher initialized on topic /get_target_point");
+  vtkInfoMacro("Target point publisher initialized");
 }
 
 //---------------------------------------------------------------------------
@@ -263,18 +258,18 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   if (!found)
   {
     point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
-    vtkDebugMacro("Target point not found, publishing NaN");
   }
 
   vtkNew<vtkDoubleArray> arr;
-  arr->SetNumberOfComponents(1);  // 1 component per value
-  arr->SetNumberOfTuples(3);      // 3 values (x, y, z)
+  arr->SetNumberOfComponents(1);
+  arr->SetNumberOfTuples(3);
   arr->SetValue(0, point[0]);
   arr->SetValue(1, point[1]);
   arr->SetValue(2, point[2]);
 
-  // Call Publish directly on the typed publisher node
-  this->TargetPointPublisher->Publish(arr.GetPointer());
+  // Use SetLastMessage to trigger publication
+  vtkVariant variant(arr.GetPointer());
+  this->TargetPointPublisher->SetLastMessage(variant);
   
   vtkDebugMacro("Published target point: [" << point[0] << ", " 
                 << point[1] << ", " << point[2] << "]");
