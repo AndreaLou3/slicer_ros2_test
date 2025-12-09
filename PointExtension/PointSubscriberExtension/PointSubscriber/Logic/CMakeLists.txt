@@ -17,6 +17,7 @@ find_package(rcl_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(service_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)        # <-- added for Image messages
 find_package(rcpputils REQUIRED)
 
 # -----------------------------------------------------------------------------
@@ -27,6 +28,11 @@ set(${KIT}_INCLUDE_DIRECTORIES
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
 )
+
+# Also include the ROS2 install tree so headers like sensor_msgs/msg/image.hpp are found
+string(REPLACE ":" ";" AMENT_PATHS "$ENV{AMENT_PREFIX_PATH}")
+list(GET AMENT_PATHS 0 AMENT_FIRST_PATH)
+list(APPEND ${KIT}_INCLUDE_DIRECTORIES "${AMENT_FIRST_PATH}/include")
 
 # -----------------------------------------------------------------------------
 set(${KIT}_SRCS
@@ -46,18 +52,15 @@ set(${KIT}_TARGET_LIBRARIES
   ${VTK_LIBRARIES}
   ${ITK_LIBRARIES}
 
-  # ROS 2 actual C++ message libraries
+  # ROS 2 C++ message libraries
   rclcpp::rclcpp
   rcpputils::rcpputils
   std_msgs::std_msgs__rosidl_generator_cpp
   geometry_msgs::geometry_msgs__rosidl_generator_cpp
   service_msgs::service_msgs__rosidl_generator_cpp
+  sensor_msgs::sensor_msgs__rosidl_generator_cpp
   rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
 )
-
-# -----------------------------------------------------------------------------
-# Additional ROS 2 include directory root (safe & recommended)
-include_directories(/opt/ros/jazzy/include)
 
 # -----------------------------------------------------------------------------
 SlicerMacroBuildModuleLogic(
