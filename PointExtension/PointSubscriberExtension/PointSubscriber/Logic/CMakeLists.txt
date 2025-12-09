@@ -54,6 +54,9 @@ set(${KIT}_TARGET_LIBRARIES
   rcpputils::rcpputils
 )
 
+# ROS 2 include root (needed because AMENT does not export include dirs correctly)
+include_directories(/opt/ros/jazzy/include)
+
 # -----------------------------------------------------------------------------
 SlicerMacroBuildModuleLogic(
   NAME ${KIT}
