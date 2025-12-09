@@ -16,7 +16,7 @@
 ==============================================================================*/
 
 // PointSubscriber Logic includes
-#include "vtkSlicerPointSubscriberLogic.h"
+#include "vtkSlicerPointSubscriberLogic.h" 
 
 // MRML includes
 #include <vtkMRMLScene.h>
