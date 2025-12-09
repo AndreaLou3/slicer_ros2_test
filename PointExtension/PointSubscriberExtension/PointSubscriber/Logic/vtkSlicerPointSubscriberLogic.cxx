@@ -69,26 +69,6 @@ void vtkSlicerPointSubscriberLogic::PrintSelf(ostream& os, vtkIndent indent)
   this->Superclass::PrintSelf(os, indent);
 }
 
-//---------------------------------------------------------------------------
-// void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
-// {
-//   vtkNew<vtkIntArray> events;
-//   events->InsertNextValue(vtkMRMLScene::NodeAddedEvent);
-//   events->InsertNextValue(vtkMRMLScene::NodeRemovedEvent);
-//   events->InsertNextValue(vtkMRMLScene::EndBatchProcessEvent);
-//   this->SetAndObserveMRMLSceneEventsInternal(newScene, events.GetPointer());
-  
-//   // Initialize ROS2 subscriber and publisher when scene is set
-//   if (newScene && !this->Initialized)
-//   {
-//     vtkInfoMacro("Scene is now available, initializing ROS2 nodes...");
-//     this->InitializeSubscriber();
-//     this->InitializePublisher();
-//     this->StartPublishing(100.0);
-//     this->Initialized = true;
-//     vtkInfoMacro("ROS2 initialization complete");
-//   }
-// }
 //----------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
 {
@@ -145,12 +125,6 @@ void vtkSlicerPointSubscriberLogic::UpdateFromMRMLScene()
 {
   assert(this->GetMRMLScene() != 0);
 }
-
-//---------------------------------------------------------------------------
-// void vtkSlicerPointSubscriberLogic
-// ::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
-// {
-// }
 
 //---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic
@@ -234,7 +208,7 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
   // CreateAndAddPublisherNode returns base class pointer
   auto basePublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
   
-  // Cast to derived type to access Publish method
+  // Cast to derived type to access Publish method IMPORTANT
   this->TargetPointPublisher = dynamic_cast<vtkMRMLROS2PublisherDoubleArrayNode*>(basePublisher);
 
   if (!this->TargetPointPublisher)
@@ -270,7 +244,7 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetValue(1, point[1]);
   arr->SetValue(2, point[2]);
 
-  // Now you can call Publish directly!
+  // direct call publish after exposing Publish method
   this->TargetPointPublisher->Publish(arr.GetPointer());
   
   vtkDebugMacro("Published target point: [" << point[0] << ", " 
@@ -291,10 +265,6 @@ void vtkSlicerPointSubscriberLogic::StartPublishing(double intervalMs)
     vtkErrorMacro("Publisher not initialized! Call InitializePublisher() first.");
     return;
   }
-
-  // Create a timer to periodically publish the target point
-  // this->PublishTimerId = this->GetMRMLScene()->AddObserver(
-  //   vtkMRMLScene::EndBatchProcessEvent, this->PublishTimer);
   
   this->PublishInterval = intervalMs;
   this->LastPublishTime = vtkTimerLog::GetUniversalTime();
@@ -335,39 +305,6 @@ void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
     self->LastPublishTime = currentTime;
   }
 }
-
-
-// //---------------------------------------------------------------------------
-// void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
-// {
-//   if (!this->TargetPointPublisherWrapper)
-//   {
-//     vtkErrorMacro("Publisher wrapper not initialized!");
-//     return;
-//   }
-
-//   double point[3];
-//   bool found = this->GetTargetPointCoordinates(point);
-
-//   if (!found)
-//   {
-//     point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
-//     vtkDebugMacro("Target point not found, publishing NaN");
-//   }
-//   else
-//   {
-//     vtkDebugMacro("Publishing target point: [" << point[0] << ", " 
-//                   << point[1] << ", " << point[2] << "]");
-//   }
-
-//   vtkNew<vtkDoubleArray> arr;
-//   arr->SetNumberOfComponents(3);
-//   arr->SetNumberOfTuples(1);
-//   arr->SetTuple(0, point);
-
-//   // Use the wrapper to publish
-//   this->TargetPointPublisherWrapper->PublishDoubleArray(arr.GetPointer());
-// }
 
 //---------------------------------------------------------------------------
 bool vtkSlicerPointSubscriberLogic::GetTargetPointCoordinates(double point[3])
@@ -489,7 +426,7 @@ void vtkSlicerPointSubscriberLogic::UpdateFiducial(double xyz[3])
   // Update or add the control point with valid data
   if (this->FiducialNode->GetNumberOfControlPoints() == 0)
   {
-    // First time - add the control point
+    // First time: add the control point
     this->FiducialNode->AddControlPoint(xyz[0], xyz[1], xyz[2]);
     vtkInfoMacro("Control point added at: [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]");
   }

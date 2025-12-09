@@ -91,12 +91,6 @@ private:
   static void PublishTimerCallback(vtkObject* caller, unsigned long eid, 
                                    void* clientData, void* callData);
 
-  // // ROS2 subscriber node
-  // vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
-
-  // // ROS2 publisher node for target point
-  // vtkMRMLROS2PublisherNode* TargetPointPublisher = nullptr;
-
   // Fiducial node for visualization
   vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr;
 
