@@ -113,19 +113,19 @@ void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
   {
     vtkInfoMacro("ROS2 node detected, initializing subscriber and publisher...");
 
-    // Register all default ROS2 nodes in the scene
-    vtkSlicerROS2Logic* rosLogic =
-        vtkSlicerROS2Logic::SafeDownCast(
-            qSlicerCoreApplication::application()->moduleLogic("ROS2"));
-    if (rosLogic)
-    {
-      rosLogic->RegisterNodes();
-    }
-    else
-    {
-      vtkWarningMacro("Could not find SlicerROS2 module logic");
-    }
-    
+    // // Register all default ROS2 nodes in the scene
+    // vtkSlicerROS2Logic* rosLogic =
+    //     vtkSlicerROS2Logic::SafeDownCast(
+    //         qSlicerCoreApplication::application()->moduleLogic("ROS2"));
+    // if (rosLogic)
+    // {
+    //   rosLogic->RegisterNodes();
+    // }
+    // else
+    // {
+    //   vtkWarningMacro("Could not find SlicerROS2 module logic");
+    // }
+
     vtkMRMLScene* scene = this->GetMRMLScene();
     if (scene)
     {
