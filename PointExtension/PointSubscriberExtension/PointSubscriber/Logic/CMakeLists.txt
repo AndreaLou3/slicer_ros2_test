@@ -43,6 +43,7 @@ set(${KIT}_INCLUDE_DIRECTORIES
   ${AMENT_FIRST_PATH}/include/std_msgs
   ${AMENT_FIRST_PATH}/include/geometry_msgs
   ${AMENT_FIRST_PATH}/include/builtin_interfaces
+  ${AMENT_FIRST_PATH}/include/service_msgs
   )
 
 #-----------------------------------------------------------------------------
