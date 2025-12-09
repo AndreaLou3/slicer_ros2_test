@@ -64,6 +64,26 @@ void vtkSlicerPointSubscriberLogic::PrintSelf(ostream& os, vtkIndent indent)
 }
 
 //---------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
+// {
+//   vtkNew<vtkIntArray> events;
+//   events->InsertNextValue(vtkMRMLScene::NodeAddedEvent);
+//   events->InsertNextValue(vtkMRMLScene::NodeRemovedEvent);
+//   events->InsertNextValue(vtkMRMLScene::EndBatchProcessEvent);
+//   this->SetAndObserveMRMLSceneEventsInternal(newScene, events.GetPointer());
+  
+//   // Initialize ROS2 subscriber and publisher when scene is set
+//   if (newScene && !this->Initialized)
+//   {
+//     vtkInfoMacro("Scene is now available, initializing ROS2 nodes...");
+//     this->InitializeSubscriber();
+//     this->InitializePublisher();
+//     this->StartPublishing(100.0);
+//     this->Initialized = true;
+//     vtkInfoMacro("ROS2 initialization complete");
+//   }
+// }
+//----------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
 {
   vtkNew<vtkIntArray> events;
@@ -71,11 +91,22 @@ void vtkSlicerPointSubscriberLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene
   events->InsertNextValue(vtkMRMLScene::NodeRemovedEvent);
   events->InsertNextValue(vtkMRMLScene::EndBatchProcessEvent);
   this->SetAndObserveMRMLSceneEventsInternal(newScene, events.GetPointer());
-  
-  // Initialize ROS2 subscriber and publisher when scene is set
-  if (newScene && !this->Initialized)
+
+  // Reset initialization flag
+  this->Initialized = false;
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
+{
+  if (this->Initialized)
+    return;
+
+  // Check if the node is the ROS2 node
+  auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(node);
+  if (rosNode)
   {
-    vtkInfoMacro("Scene is now available, initializing ROS2 nodes...");
+    vtkInfoMacro("ROS2 node detected, initializing subscriber and publisher...");
     this->InitializeSubscriber();
     this->InitializePublisher();
     this->StartPublishing(100.0);
