@@ -23,14 +23,18 @@ find_package(rcpputils REQUIRED)
 find_package(rosbag2_interfaces REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(turtlesim REQUIRED)
+find_package(tf2_ros REQUIRED)
+
 
 # -----------------------------------------------------------------------------
 # Include dirs for Slicer + your generated ROS2 MRML/Logic headers
+include_directories(${tf2_ros_INCLUDE_DIRS})
 set(${KIT}_INCLUDE_DIRECTORIES
   ${ROS2_MODULE_SOURCE_DIR}/MRML
   ${ROS2_MODULE_SOURCE_DIR}/Logic
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
+  ${tf2_ros_INCLUDE_DIRS}
 )
 
 # Also include the ROS2 install tree so headers like sensor_msgs/msg/image.hpp are found
