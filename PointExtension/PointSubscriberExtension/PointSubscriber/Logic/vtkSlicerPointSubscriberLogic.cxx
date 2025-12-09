@@ -388,7 +388,7 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
   // vtkInfoMacro("Received point: [" << point[0] << ", " << point[1] << ", " << point[2] << "]");
   
   // this->UpdateFiducial(point);
-  if (arr->GetNumberOfComponents() != 3 || arr->GetNumberOfTuples() != 1)
+  if (arr->GetNumberOfComponents() != 1 || arr->GetNumberOfTuples() != 3)
   {
     vtkErrorMacro("Expected 1 tuple with 3 components, got "
                   << arr->GetNumberOfTuples() << " tuples and "
