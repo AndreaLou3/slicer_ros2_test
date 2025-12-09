@@ -66,5 +66,6 @@ void qSlicerPointSubscriberModuleWidget::setup()
   if (logic)
   {
     logic->InitializeSubscriber();
+    logic->InitializePublisher();
   }
 }
