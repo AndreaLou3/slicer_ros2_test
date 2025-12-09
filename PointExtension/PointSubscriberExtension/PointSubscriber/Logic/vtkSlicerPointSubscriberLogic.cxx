@@ -374,31 +374,12 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
                << " tuples and " << arr->GetNumberOfComponents() 
                << " components");
 
-  // if (arr->GetNumberOfTuples() != 1 || arr->GetNumberOfComponents() != 3)
-  // {
-  //     vtkErrorMacro("Expected 1 tuple with 3 components, got "
-  //                   << arr->GetNumberOfTuples() << " tuples and "
-  //                   << arr->GetNumberOfComponents() << " components");
-  //     return;
-  // }
-
-  // double point[3];
-  // for (int i = 0; i < 3; ++i)
-  //   point[i] = arr->GetValue(i);
-
-  // this->UpdateFiducial(point);
-
-  // --- MODIFIED CHECK AND READING LOGIC START ---
   if (arr->GetNumberOfTuples() != 3 || arr->GetNumberOfComponents() != 1)
   {
-      // Keep the original check as a fallback for robustness
-      if (arr->GetNumberOfTuples() != 1 || arr->GetNumberOfComponents() != 3)
-      {
-          vtkErrorMacro("Expected 3 tuples with 1 component OR 1 tuple with 3 components, got "
-                        << arr->GetNumberOfTuples() << " tuples and "
-                        << arr->GetNumberOfComponents() << " components");
-          return;
-      }
+    vtkErrorMacro("Expected 3 tuples with 1 component OR 1 tuple with 3 components, got "
+                  << arr->GetNumberOfTuples() << " tuples and "
+                  << arr->GetNumberOfComponents() << " components");
+    return;
   }
 
   if (arr->GetNumberOfTuples() * arr->GetNumberOfComponents() != 3)
@@ -409,13 +390,10 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
   
   double point[3];
 
-  // Read the 3 values sequentially, regardless of 3x1 or 1x3 structure
-  point[0] = arr->GetValue(0); // This gets the first value (index 0)
-  point[1] = arr->GetValue(1); // This gets the second value (index 1)
-  point[2] = arr->GetValue(2); // This gets the third value (index 2)
-
+  point[0] = arr->GetValue(0);
+  point[1] = arr->GetValue(1);
+  point[2] = arr->GetValue(2);
   this->UpdateFiducial(point);
-  // --- MODIFIED CHECK AND READING LOGIC END ---
 
 }
 
