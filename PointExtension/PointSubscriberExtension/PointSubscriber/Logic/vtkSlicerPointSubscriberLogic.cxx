@@ -380,9 +380,7 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
   }
 
   double point[3];
-  point[0] = arr->GetValue(0);
-  point[1] = arr->GetValue(1);
-  point[2] = arr->GetValue(2);
+  arr->GetTuple(0, point);
   
   vtkInfoMacro("Received point: [" << point[0] << ", " << point[1] << ", " << point[2] << "]");
   
