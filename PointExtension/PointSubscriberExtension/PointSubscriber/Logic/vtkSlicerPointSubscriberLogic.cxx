@@ -332,14 +332,17 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
   arr->SetNumberOfTuples(1);
   arr->SetTuple(0, point);
 
-  auto wrapper = dynamic_cast<PointPublisherWrapper*>(this->TargetPointPublisher);
-  if (!wrapper)
+  auto internalsVTK = dynamic_cast<
+      vtkMRMLROS2PublisherVTKInternals<vtkDoubleArray, std_msgs::msg::Float64MultiArray>*>(
+          this->TargetPointPublisher->mInternals);
+
+  if (!internalsVTK)
   {
-    vtkErrorMacro("Failed to cast TargetPointPublisher to wrapper type!");
-    return;
+      vtkErrorMacro("Failed to get VTK internals!");
+      return;
   }
 
-  wrapper->PublishDoubleArray(arr.GetPointer());
+  internalsVTK->Publish(arr.GetPointer());
 }
 
 //---------------------------------------------------------------------------
