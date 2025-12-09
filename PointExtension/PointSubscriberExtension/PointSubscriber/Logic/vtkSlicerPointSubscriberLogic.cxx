@@ -215,6 +215,7 @@ public:
 
 
 //---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 void vtkSlicerPointSubscriberLogic::InitializePublisher()
 {
   vtkMRMLScene* scene = this->GetMRMLScene();
@@ -224,7 +225,6 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
     return;
   }
 
-  // Find the active ROS2 node in the scene
   auto rosNode = vtkMRMLROS2NodeNode::SafeDownCast(
       scene->GetFirstNodeByClass("vtkMRMLROS2NodeNode"));
   if (!rosNode)
@@ -233,17 +233,51 @@ void vtkSlicerPointSubscriberLogic::InitializePublisher()
     return;
   }
 
-  // Create a DoubleArray publisher for target point coordinates
-  this->TargetPointPublisher = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  // Create a DoubleArray publisher - this returns the correct typed node
+  auto pub = rosNode->CreateAndAddPublisherNode("DoubleArray", "/get_target_point");
+  
+  // Cast to the specific DoubleArray publisher type
+  this->TargetPointPublisher = vtkMRMLROS2PublisherDoubleArrayNode::SafeDownCast(pub);
 
   if (!this->TargetPointPublisher)
   {
-    vtkErrorMacro("Failed to create publisher!");
+    vtkErrorMacro("Failed to create DoubleArray publisher!");
     return;
   }
   
-  this->TargetPointPublisherWrapper = std::make_unique<PointPublisherWrapper>(this->TargetPointPublisher);
   vtkInfoMacro("Target point publisher initialized on topic /get_target_point");
+}
+
+//---------------------------------------------------------------------------
+void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
+{
+  if (!this->TargetPointPublisher)
+  {
+    vtkErrorMacro("Publisher not initialized!");
+    return;
+  }
+
+  double point[3];
+  bool found = this->GetTargetPointCoordinates(point);
+
+  if (!found)
+  {
+    point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
+    vtkDebugMacro("Target point not found, publishing NaN");
+  }
+
+  vtkNew<vtkDoubleArray> arr;
+  arr->SetNumberOfComponents(1);  // 1 component per value
+  arr->SetNumberOfTuples(3);      // 3 values (x, y, z)
+  arr->SetValue(0, point[0]);
+  arr->SetValue(1, point[1]);
+  arr->SetValue(2, point[2]);
+
+  // Call Publish directly on the typed publisher node
+  this->TargetPointPublisher->Publish(arr.GetPointer());
+  
+  vtkDebugMacro("Published target point: [" << point[0] << ", " 
+                << point[1] << ", " << point[2] << "]");
 }
 
 //---------------------------------------------------------------------------
@@ -306,37 +340,37 @@ void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
 }
 
 
-//---------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
-{
-  if (!this->TargetPointPublisherWrapper)
-  {
-    vtkErrorMacro("Publisher wrapper not initialized!");
-    return;
-  }
+// //---------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
+// {
+//   if (!this->TargetPointPublisherWrapper)
+//   {
+//     vtkErrorMacro("Publisher wrapper not initialized!");
+//     return;
+//   }
 
-  double point[3];
-  bool found = this->GetTargetPointCoordinates(point);
+//   double point[3];
+//   bool found = this->GetTargetPointCoordinates(point);
 
-  if (!found)
-  {
-    point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
-    vtkDebugMacro("Target point not found, publishing NaN");
-  }
-  else
-  {
-    vtkDebugMacro("Publishing target point: [" << point[0] << ", " 
-                  << point[1] << ", " << point[2] << "]");
-  }
+//   if (!found)
+//   {
+//     point[0] = point[1] = point[2] = std::numeric_limits<double>::quiet_NaN();
+//     vtkDebugMacro("Target point not found, publishing NaN");
+//   }
+//   else
+//   {
+//     vtkDebugMacro("Publishing target point: [" << point[0] << ", " 
+//                   << point[1] << ", " << point[2] << "]");
+//   }
 
-  vtkNew<vtkDoubleArray> arr;
-  arr->SetNumberOfComponents(3);
-  arr->SetNumberOfTuples(1);
-  arr->SetTuple(0, point);
+//   vtkNew<vtkDoubleArray> arr;
+//   arr->SetNumberOfComponents(3);
+//   arr->SetNumberOfTuples(1);
+//   arr->SetTuple(0, point);
 
-  // Use the wrapper to publish
-  this->TargetPointPublisherWrapper->PublishDoubleArray(arr.GetPointer());
-}
+//   // Use the wrapper to publish
+//   this->TargetPointPublisherWrapper->PublishDoubleArray(arr.GetPointer());
+// }
 
 //---------------------------------------------------------------------------
 bool vtkSlicerPointSubscriberLogic::GetTargetPointCoordinates(double point[3])

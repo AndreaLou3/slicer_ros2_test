@@ -67,6 +67,9 @@ protected:
   void OnMRMLSceneNodeAdded(vtkMRMLNode* node) override;
   void OnMRMLSceneNodeRemoved(vtkMRMLNode* node) override;
 
+  vtkMRMLROS2SubscriberNode* PointSubscriberNode = nullptr;
+  vtkMRMLROS2PublisherDoubleArrayNode* TargetPointPublisher = nullptr;  // Changed type!
+
 private:
   vtkSlicerPointSubscriberLogic(const vtkSlicerPointSubscriberLogic&) = delete;
   void operator=(const vtkSlicerPointSubscriberLogic&) = delete;
