@@ -11,7 +11,7 @@ set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
 set(ROS2_MODULE_BUILD_DIR  "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
 # -----------------------------------------------------------------------------
-# ROS 2 dependencies (modern, correct)
+# ROS 2 dependencies (C++ versions)
 find_package(rclcpp REQUIRED)
 find_package(rcl_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -37,6 +37,7 @@ set(${KIT}_SRCS
 # -----------------------------------------------------------------------------
 # Libraries required by this logic module
 set(${KIT}_TARGET_LIBRARIES
+  # Your generated ROS2 modules
   ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleMRML.so
   ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleLogic.so
 
@@ -45,16 +46,17 @@ set(${KIT}_TARGET_LIBRARIES
   ${VTK_LIBRARIES}
   ${ITK_LIBRARIES}
 
-  # ROS 2 modern linkage (no more manual include dirs)
+  # ROS 2 actual C++ message libraries
   rclcpp::rclcpp
-  std_msgs::std_msgs
-  geometry_msgs::geometry_msgs
-  service_msgs::service_msgs
-  rcl_interfaces::rcl_interfaces
   rcpputils::rcpputils
+  std_msgs::std_msgs__rosidl_generator_cpp
+  geometry_msgs::geometry_msgs__rosidl_generator_cpp
+  service_msgs::service_msgs__rosidl_generator_cpp
+  rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
 )
 
-# ROS 2 include root (needed because AMENT does not export include dirs correctly)
+# -----------------------------------------------------------------------------
+# Additional ROS 2 include directory root (safe & recommended)
 include_directories(/opt/ros/jazzy/include)
 
 # -----------------------------------------------------------------------------
