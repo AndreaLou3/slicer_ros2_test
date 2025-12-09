@@ -374,11 +374,12 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
                << " tuples and " << arr->GetNumberOfComponents() 
                << " components");
 
-  // Treat data as one tuple of 3 components
-  if (arr->GetNumberOfValues() < 3)
+  if (arr->GetNumberOfTuples() != 1 || arr->GetNumberOfComponents() != 3)
   {
-    vtkErrorMacro("Array doesn't have at least 3 values!");
-    return;
+      vtkErrorMacro("Expected 1 tuple with 3 components, got "
+                    << arr->GetNumberOfTuples() << " tuples and "
+                    << arr->GetNumberOfComponents() << " components");
+      return;
   }
 
   // double point[3];
