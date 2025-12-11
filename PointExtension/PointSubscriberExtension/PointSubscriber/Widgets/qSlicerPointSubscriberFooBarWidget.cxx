@@ -22,6 +22,10 @@
 #include "qSlicerPointSubscriberFooBarWidget.h"
 #include "ui_qSlicerPointSubscriberFooBarWidget.h"
 
+// Need to include logic header and application header
+#include "vtkSlicerPointSubscriberLogic.h" 
+#include <qSlicerApplication.h>
+
 //-----------------------------------------------------------------------------
 class qSlicerPointSubscriberFooBarWidgetPrivate
   : public Ui_qSlicerPointSubscriberFooBarWidget
@@ -29,6 +33,7 @@ class qSlicerPointSubscriberFooBarWidgetPrivate
   Q_DECLARE_PUBLIC(qSlicerPointSubscriberFooBarWidget);
 protected:
   qSlicerPointSubscriberFooBarWidget* const q_ptr;
+  vtkSlicerPointSubscriberLogic* Logic;
 
 public:
   qSlicerPointSubscriberFooBarWidgetPrivate(
@@ -41,7 +46,16 @@ qSlicerPointSubscriberFooBarWidgetPrivate
 ::qSlicerPointSubscriberFooBarWidgetPrivate(
   qSlicerPointSubscriberFooBarWidget& object)
   : q_ptr(&object)
+  , Logic(nullptr)
 {
+  // Retrieve the logic pointer here
+  this->Logic = vtkSlicerPointSubscriberLogic::SafeDownCast(
+      qSlicerCoreApplication::application()->moduleLogic("PointSubscriber"));
+  
+  if (!this->Logic)
+  {
+      qWarning() << "PointSubscriber module logic not found!";
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -62,6 +76,47 @@ qSlicerPointSubscriberFooBarWidget
 {
   Q_D(qSlicerPointSubscriberFooBarWidget);
   d->setupUi(this);
+
+  // Connecting button to logic
+  // d->FooBarButton is available because its objectName is "FooBarButton" in the .ui file.
+  // SIGNAL(clicked()) is the standard signal for a QPushButton.
+  // SLOT(onFooBarButtonClicked()) is the function from the header.
+  connect(d->FooBarButton, SIGNAL(clicked()),
+          this, SLOT(onFooBarButtonClicked()));
+}
+
+// //-----------------------------------------------------------------------------
+// qSlicerPointSubscriberFooBarWidget
+// ::qSlicerPointSubscriberFooBarWidget(QWidget* parentWidget)
+//   : Superclass( parentWidget )
+//   , d_ptr( new qSlicerPointSubscriberFooBarWidgetPrivate(*this) )
+// {
+//   Q_D(qSlicerPointSubscriberFooBarWidget);
+//   d->setupUi(this);
+// }
+
+//-----------------------------------------------------------------------------
+void qSlicerPointSubscriberFooBarWidget
+::onFooBarButtonClicked()
+{
+  // This function is now executed every time the "Foo Bar" button is pressed.
+  // **Place your ROS publishing logic here.**
+
+  // For debugging, use qDebug (requires #include <QDebug> at the top):
+  qDebug() << "--- Foo Bar Button Clicked! ---";
+  
+  Q_D(qSlicerPointSubscriberFooBarWidget);
+  
+  if (d->Logic)
+  {
+    // *** THE ONE-TIME PUBLISH CALL ***
+    d->Logic->PublishTargetPoint();
+    qInfo() << "ROS2 target coordinates published once.";
+  }
+  else
+  {
+    qWarning() << "Cannot publish: Module logic is null.";
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -69,3 +124,5 @@ qSlicerPointSubscriberFooBarWidget
 ::~qSlicerPointSubscriberFooBarWidget()
 {
 }
+
+

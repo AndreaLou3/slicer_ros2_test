@@ -52,15 +52,15 @@ vtkStandardNewMacro(vtkSlicerPointSubscriberLogic);
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::vtkSlicerPointSubscriberLogic()
 {
-  this->PublishTimer = vtkSmartPointer<vtkCallbackCommand>::New();
-  this->PublishTimer->SetCallback(PublishTimerCallback);
-  this->PublishTimer->SetClientData(this);
+  // this->PublishTimer = vtkSmartPointer<vtkCallbackCommand>::New();
+  // this->PublishTimer->SetCallback(PublishTimerCallback);
+  // this->PublishTimer->SetClientData(this);
 }
 
 //----------------------------------------------------------------------------
 vtkSlicerPointSubscriberLogic::~vtkSlicerPointSubscriberLogic()
 {
-  this->StopPublishing();
+  // this->StopPublishing();
 }
 
 //----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ void vtkSlicerPointSubscriberLogic::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
     // Now it’s safe to create your subscriber/publisher
     this->InitializeSubscriber();
     this->InitializePublisher();
-    this->StartPublishing(100.0);
+    // this->StartPublishing(100.0);
     this->Initialized = true;
 
     vtkInfoMacro("ROS2 initialization complete");
@@ -251,60 +251,60 @@ void vtkSlicerPointSubscriberLogic::PublishTargetPoint()
                 << point[1] << ", " << point[2] << "]");
 }
 
-//---------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic::StartPublishing(double intervalMs)
-{
-  if (this->PublishTimerId != 0)
-  {
-    vtkWarningMacro("Publisher timer already running!");
-    return;
-  }
+// //---------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::StartPublishing(double intervalMs)
+// {
+//   if (this->PublishTimerId != 0)
+//   {
+//     vtkWarningMacro("Publisher timer already running!");
+//     return;
+//   }
 
-  if (!this->TargetPointPublisher)
-  {
-    vtkErrorMacro("Publisher not initialized! Call InitializePublisher() first.");
-    return;
-  }
+//   if (!this->TargetPointPublisher)
+//   {
+//     vtkErrorMacro("Publisher not initialized! Call InitializePublisher() first.");
+//     return;
+//   }
   
-  this->PublishInterval = intervalMs;
-  this->LastPublishTime = vtkTimerLog::GetUniversalTime();
+//   this->PublishInterval = intervalMs;
+//   this->LastPublishTime = vtkTimerLog::GetUniversalTime();
 
-  vtkInfoMacro("Started publishing target point every " << intervalMs << " ms");
-}
+//   vtkInfoMacro("Started publishing target point every " << intervalMs << " ms");
+// }
+
+// //---------------------------------------------------------------------------
+// void vtkSlicerPointSubscriberLogic::StopPublishing()
+// {
+//   if (this->PublishTimerId != 0 && this->GetMRMLScene())
+//   {
+//     this->GetMRMLScene()->RemoveObserver(this->PublishTimerId);
+//     this->PublishTimerId = 0;
+//     vtkInfoMacro("Stopped publishing target point");
+//   }
+// }
 
 //---------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic::StopPublishing()
-{
-  if (this->PublishTimerId != 0 && this->GetMRMLScene())
-  {
-    this->GetMRMLScene()->RemoveObserver(this->PublishTimerId);
-    this->PublishTimerId = 0;
-    vtkInfoMacro("Stopped publishing target point");
-  }
-}
-
-//---------------------------------------------------------------------------
-void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
-    vtkObject* caller, unsigned long, void* clientData, void*)
-{
-  vtkSlicerPointSubscriberLogic* self = 
-    reinterpret_cast<vtkSlicerPointSubscriberLogic*>(clientData);
+// void vtkSlicerPointSubscriberLogic::PublishTimerCallback(
+//     vtkObject* caller, unsigned long, void* clientData, void*)
+// {
+//   vtkSlicerPointSubscriberLogic* self = 
+//     reinterpret_cast<vtkSlicerPointSubscriberLogic*>(clientData);
   
-  if (!self)
-  {
-    return;
-  }
+//   if (!self)
+//   {
+//     return;
+//   }
 
-  // Check if enough time has elapsed
-  double currentTime = vtkTimerLog::GetUniversalTime();
-  double elapsedMs = (currentTime - self->LastPublishTime) * 1000.0;
+//   // Check if enough time has elapsed
+//   double currentTime = vtkTimerLog::GetUniversalTime();
+//   double elapsedMs = (currentTime - self->LastPublishTime) * 1000.0;
   
-  if (elapsedMs >= self->PublishInterval)
-  {
-    self->PublishTargetPoint();
-    self->LastPublishTime = currentTime;
-  }
-}
+//   if (elapsedMs >= self->PublishInterval)
+//   {
+//     self->PublishTargetPoint();
+//     self->LastPublishTime = currentTime;
+//   }
+// }
 
 //---------------------------------------------------------------------------
 bool vtkSlicerPointSubscriberLogic::GetTargetPointCoordinates(double point[3])
@@ -376,7 +376,7 @@ void vtkSlicerPointSubscriberLogic::ProcessMRMLCallbacks(
 
   if (arr->GetNumberOfTuples() != 3 || arr->GetNumberOfComponents() != 1)
   {
-    vtkErrorMacro("Expected 3 tuples with 1 component OR 1 tuple with 3 components, got "
+    vtkErrorMacro("Expected 3 tuples with 1 component"
                   << arr->GetNumberOfTuples() << " tuples and "
                   << arr->GetNumberOfComponents() << " components");
     return;

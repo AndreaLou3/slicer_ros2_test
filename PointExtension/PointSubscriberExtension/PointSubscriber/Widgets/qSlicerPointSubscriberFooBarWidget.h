@@ -18,9 +18,6 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerPointSubscriberFooBarWidget_h
-#define __qSlicerPointSubscriberFooBarWidget_h
-
 // Qt includes
 #include <QWidget>
 
@@ -37,6 +34,9 @@ public:
   typedef QWidget Superclass;
   qSlicerPointSubscriberFooBarWidget(QWidget *parent=0);
   ~qSlicerPointSubscriberFooBarWidget() override;
+
+public slots: 
+  void onFooBarButtonClicked();
 
 protected slots:
 

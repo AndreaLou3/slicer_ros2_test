@@ -74,11 +74,10 @@ void qSlicerPointSubscriberModuleWidget::setup()
       logic->InitializeSubscriber();
       logic->InitializePublisher();
 
-      // Setup Qt timer for periodic publishing
       PublishTimer = new QTimer(this);
       connect(PublishTimer, &QTimer::timeout, [logic]() {
           logic->PublishTargetPoint();
       });
-      PublishTimer->start(100); // 100 ms interval
+      PublishTimer->start(100);
   }
 }

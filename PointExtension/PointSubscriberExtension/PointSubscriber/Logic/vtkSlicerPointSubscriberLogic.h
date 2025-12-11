@@ -46,15 +46,12 @@ public:
   vtkTypeMacro(vtkSlicerPointSubscriberLogic, vtkSlicerModuleLogic);
   void PrintSelf(ostream& os, vtkIndent indent) override;
 
-  // Initialize the ROS2 subscriber
   void InitializeSubscriber();
-
-  // Initialize the ROS2 publisher for target point
   void InitializePublisher();
 
-  // Start/Stop publishing target point periodically
-  void StartPublishing(double intervalMs = 100.0);
-  void StopPublishing();
+  // Start/Stop publishing target point periodically (replace by timer?)
+  // void StartPublishing(double intervalMs = 100.0);
+  // void StopPublishing();
 
   // Manually publish the current target point (can be called anytime)
   void PublishTargetPoint();
@@ -88,17 +85,17 @@ private:
   bool GetTargetPointCoordinates(double point[3]);
 
   // Timer callback for periodic publishing
-  static void PublishTimerCallback(vtkObject* caller, unsigned long eid, 
-                                   void* clientData, void* callData);
+  // static void PublishTimerCallback(vtkObject* caller, unsigned long eid, 
+  //                                  void* clientData, void* callData);
 
   // Fiducial node for visualization
   vtkMRMLMarkupsFiducialNode* FiducialNode = nullptr;
 
   // Timer for periodic publishing
-  vtkSmartPointer<vtkCallbackCommand> PublishTimer;
-  unsigned long PublishTimerId = 0;
-  double PublishInterval = 100.0;
-  double LastPublishTime = 0.0;
+  // vtkSmartPointer<vtkCallbackCommand> PublishTimer;
+  // unsigned long PublishTimerId = 0;
+  // double PublishInterval = 100.0;
+  // double LastPublishTime = 0.0;
   
   // Track if we've already initialized
   bool Initialized = false;
