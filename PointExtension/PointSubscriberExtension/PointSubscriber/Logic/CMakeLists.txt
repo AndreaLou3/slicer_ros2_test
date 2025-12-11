@@ -26,21 +26,21 @@ find_package(turtlesim REQUIRED)
 find_package(tf2_ros REQUIRED)
 
 
-# -----------------------------------------------------------------------------
-# Include dirs for Slicer
-include_directories(${tf2_ros_INCLUDE_DIRS})
-set(${KIT}_INCLUDE_DIRECTORIES
-  ${ROS2_MODULE_SOURCE_DIR}/MRML
-  ${ROS2_MODULE_SOURCE_DIR}/Logic
-  ${ROS2_MODULE_BUILD_DIR}/MRML
-  ${ROS2_MODULE_BUILD_DIR}/Logic
-  ${tf2_ros_INCLUDE_DIRS}
-)
+# # -----------------------------------------------------------------------------
+# # Include dirs for Slicer
+# include_directories(${tf2_ros_INCLUDE_DIRS})
+# set(${KIT}_INCLUDE_DIRECTORIES
+#   ${ROS2_MODULE_SOURCE_DIR}/MRML
+#   ${ROS2_MODULE_SOURCE_DIR}/Logic
+#   ${ROS2_MODULE_BUILD_DIR}/MRML
+#   ${ROS2_MODULE_BUILD_DIR}/Logic
+#   ${tf2_ros_INCLUDE_DIRS}
+# )
 
-# Also include the ROS2 install tree
-string(REPLACE ":" ";" AMENT_PATHS "$ENV{AMENT_PREFIX_PATH}")
-list(GET AMENT_PATHS 0 AMENT_FIRST_PATH)
-list(APPEND ${KIT}_INCLUDE_DIRECTORIES "${AMENT_FIRST_PATH}/include")
+# # Also include the ROS2 install tree
+# string(REPLACE ":" ";" AMENT_PATHS "$ENV{AMENT_PREFIX_PATH}")
+# list(GET AMENT_PATHS 0 AMENT_FIRST_PATH)
+# list(APPEND ${KIT}_INCLUDE_DIRECTORIES "${AMENT_FIRST_PATH}/include")
 
 # -----------------------------------------------------------------------------
 set(${KIT}_SRCS
@@ -60,17 +60,17 @@ set(${KIT}_TARGET_LIBRARIES
   ${ITK_LIBRARIES}
 
   # ROS 2 C++ message libraries
-  rclcpp::rclcpp
-  rcpputils::rcpputils
-  std_msgs::std_msgs__rosidl_generator_cpp
-  geometry_msgs::geometry_msgs__rosidl_generator_cpp
-  service_msgs::service_msgs__rosidl_generator_cpp
-  sensor_msgs::sensor_msgs__rosidl_generator_cpp
-  rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
-  std_srvs::std_srvs__rosidl_generator_cpp
-  rosbag2_interfaces::rosbag2_interfaces__rosidl_generator_cpp
-  moveit_msgs::moveit_msgs__rosidl_generator_cpp
-  turtlesim::turtlesim__rosidl_generator_cpp
+  # rclcpp::rclcpp
+  # rcpputils::rcpputils
+  # std_msgs::std_msgs__rosidl_generator_cpp
+  # geometry_msgs::geometry_msgs__rosidl_generator_cpp
+  # service_msgs::service_msgs__rosidl_generator_cpp
+  # sensor_msgs::sensor_msgs__rosidl_generator_cpp
+  # rcl_interfaces::rcl_interfaces__rosidl_generator_cpp
+  # std_srvs::std_srvs__rosidl_generator_cpp
+  # rosbag2_interfaces::rosbag2_interfaces__rosidl_generator_cpp
+  # moveit_msgs::moveit_msgs__rosidl_generator_cpp
+  # turtlesim::turtlesim__rosidl_generator_cpp
 )
 
 # -----------------------------------------------------------------------------
