@@ -1,3 +1,4 @@
+
 #-----------------------------------------------------------------------------
 set(MODULE_NAME PointSubscriber)
 
@@ -23,6 +24,8 @@ set(MODULE_INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}/Widgets
   ${ROS2_MODULE_SOURCE_DIR}/MRML
   ${ROS2_MODULE_SOURCE_DIR}/Logic
+  /home/andrealou3/ros2_ws/src/slicer_ros2_module/MRML  # <-- Explicit absolute path
+  /home/andrealou3/ros2_ws/src/slicer_ros2_module/Logic
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
   )
