@@ -12,18 +12,18 @@ set(ROS2_MODULE_BUILD_DIR  "FILL IN")
 
 # -----------------------------------------------------------------------------
 # ROS 2 dependencies
-find_package(rclcpp REQUIRED)
-find_package(rcl_interfaces REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(service_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(rcpputils REQUIRED)
-find_package(rosbag2_interfaces REQUIRED)
-find_package(moveit_msgs REQUIRED)
-find_package(turtlesim REQUIRED)
-find_package(tf2_ros REQUIRED)
+# find_package(rclcpp REQUIRED)
+# find_package(rcl_interfaces REQUIRED)
+# find_package(std_msgs REQUIRED)
+# find_package(geometry_msgs REQUIRED)
+# find_package(service_msgs REQUIRED)
+# find_package(sensor_msgs REQUIRED)
+# find_package(std_srvs REQUIRED)
+# find_package(rcpputils REQUIRED)
+# find_package(rosbag2_interfaces REQUIRED)
+# find_package(moveit_msgs REQUIRED)
+# find_package(turtlesim REQUIRED)
+# find_package(tf2_ros REQUIRED)
 
 
 # # -----------------------------------------------------------------------------
