@@ -26,7 +26,11 @@ set(${KIT}_RESOURCES
 
 set(${KIT}_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
-  )
+  
+  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleMRML.so
+  ${ROS2_MODULE_BUILD_DIR}/lib/Slicer-5.6/qt-loadable-modules/libvtkSlicerROS2ModuleLogic.so
+  # -----------------------------------------------------------
+)
 
 #-----------------------------------------------------------------------------
 SlicerMacroBuildModuleWidgets(

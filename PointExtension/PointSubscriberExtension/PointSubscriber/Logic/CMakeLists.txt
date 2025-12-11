@@ -7,8 +7,8 @@ set(${KIT}_EXPORT_DIRECTIVE
 
 # -----------------------------------------------------------------------------
 # Paths to the generated ROS2 MRML/Logic node code
-set(ROS2_MODULE_SOURCE_DIR "FILL IN")
-set(ROS2_MODULE_BUILD_DIR  "FILL IN")
+set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
+set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
 # -----------------------------------------------------------------------------
 # ROS 2 dependencies
