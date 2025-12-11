@@ -1,17 +1,30 @@
-
 #-----------------------------------------------------------------------------
 set(MODULE_NAME PointSubscriber)
 
 string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 
+# --- STEP 1: DEFINE VARIABLES FIRST ---
+#-----------------------------------------------------------------------------
+# Set paths to ROS2 module (MUST BE FIRST)
+set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
+set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
+
+# --- STEP 2: APPLY GLOBAL INCLUDE PATHS ---
+# This command runs NOW and adds the paths globally, making them available 
+# when 'add_subdirectory(Logic)' is processed next.
+include_directories(
+  # Include paths using the variables defined above
+  ${ROS2_MODULE_SOURCE_DIR}/MRML
+  ${ROS2_MODULE_SOURCE_DIR}/Logic
+  ${ROS2_MODULE_BUILD_DIR}/MRML
+  ${ROS2_MODULE_BUILD_DIR}/Logic
+)
+
+# --- STEP 3: PROCESS SUBDIRECTORIES ---
+# This is where your code compilation starts, and now the headers are found.
 #-----------------------------------------------------------------------------
 add_subdirectory(Logic)
 add_subdirectory(Widgets)
-
-#-----------------------------------------------------------------------------
-# Set paths to ROS2 module
-set(ROS2_MODULE_SOURCE_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module")
-set(ROS2_MODULE_BUILD_DIR "/home/andrealou3/ros2_ws/src/slicer_ros2_module/build")
 
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
@@ -24,8 +37,9 @@ set(MODULE_INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}/Widgets
   ${ROS2_MODULE_SOURCE_DIR}/MRML
   ${ROS2_MODULE_SOURCE_DIR}/Logic
-  /home/andrealou3/ros2_ws/src/slicer_ros2_module/MRML  # <-- Explicit absolute path
+  /home/andrealou3/ros2_ws/src/slicer_ros2_module/MRML 
   /home/andrealou3/ros2_ws/src/slicer_ros2_module/Logic
+  # Add the build paths just in case they contain generated headers
   ${ROS2_MODULE_BUILD_DIR}/MRML
   ${ROS2_MODULE_BUILD_DIR}/Logic
   )
